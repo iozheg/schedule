@@ -11,8 +11,9 @@ class ClientProfile(models.Model):
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     tel_number = models.CharField(max_length=15)
-    car_model = models.CharField(max_length=40)
-    car_reg_number = models.CharField(max_length=10)
+    car_model = models.CharField(max_length=40, blank=True)
+    car_reg_number = models.CharField(max_length=10, blank=True)
+    create_date = models.DateField(auto_add_now=True)
     
     
 class BusinessProfile(models.Model):
@@ -24,3 +25,4 @@ class BusinessProfile(models.Model):
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     tel_number = models.CharField(max_length=15)
+    create_date = models.DateField(auto_add_now=True)
