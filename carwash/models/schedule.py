@@ -1,3 +1,6 @@
+from django.db import models
+from .user import BusinessProfile
+
 class Schedule(models.Model):
     """Schedule model
     
@@ -47,3 +50,5 @@ class Schedule(models.Model):
     
     active = models.BooleanField(default=True)
     create_date = models.DateField(auto_now_add=True)
+    
+    owner = models.ForeignKey(BusinessProfile, null=True, on_delete=models.SET_NULL)
