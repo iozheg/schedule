@@ -23,7 +23,6 @@ class LoginForm(forms.Form):
 
 
 class ClientProfileForm(forms.Form):
-    #username = forms.CharField(label='Email', disabled=True)
     name = forms.CharField(max_length=50, required=False)
     tel_number = forms.CharField(label='Telephone')
     car_model = forms.CharField(label='Car', max_length=40, required=False)
