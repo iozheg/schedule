@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'carwash',
+    'carwash.apps.CarwashConfig',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +55,7 @@ ROOT_URLCONF = 'schedule.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['/home/alex/projects/schedule/carwash/template'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,9 +76,12 @@ WSGI_APPLICATION = 'schedule.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+		'ENGINE': 'django.db.backends.mysql',
+		'NAME': 'carwash',
+		'USER': 'root',
+		'PASSWORD': '',
+		'HOST': 'localhost',
+	}
 }
 
 

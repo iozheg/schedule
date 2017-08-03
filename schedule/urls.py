@@ -16,6 +16,13 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from carwash import views
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'signup/', views.client_registration),
+    url(r'allusers/', views.show_all_users),    #this must be deleted
+    url(r'profile/', views.client_profile, name='client_profile'),
+    url(r'login/', views.user_login, name='user_login'),
+    url(r'^$', views.test)
 ]
