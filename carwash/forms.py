@@ -3,14 +3,14 @@ from django.contrib.auth.models import User
 from .models import ClientProfile
 
 class ClientRegistrationForm(forms.Form):
-    username = forms.CharField(label='Email', max_length=50)
+    email = forms.CharField(label='Email', max_length=50)
    # email = forms.CharField(max_length=100)
     password = forms.CharField(widget=forms.PasswordInput)
    # is_staff = forms.CharField(initial='True', widget=forms.HiddenInput)
    # tel_number = forms.CharField(label='Телефон: ', max_length=15)
    
     def save(self):
-        user = User.objects.create_user(username=self.cleaned_data['username'], password=self.cleaned_data['password'])
+        user = User.objects.create_user(username=self.cleaned_data['email'], password=self.cleaned_data['password'])
         user.save()
         user_profile = ClientProfile.objects.create(user=user)
         
