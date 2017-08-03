@@ -33,6 +33,12 @@ def client_registration(request):
 
 def client_profile(request):
     
+    ''' View for client profile
+    
+        Here we provide forms for viewing and changing client profile
+        
+    '''
+    
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login')) 
     
