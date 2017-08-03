@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+#from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 
 from .forms import ClientRegistrationForm, LoginForm, ClientProfileForm
 
@@ -40,7 +40,7 @@ def client_profile(request):
     '''
     
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('login')) 
+        return HttpResponseRedirect(reverse('user_login')) 
     
     if request.method == 'POST':
         form = ClientProfileForm(request.POST)
@@ -86,6 +86,11 @@ def user_login(request):
     
     return render(request, 'login_form.html', {'form': form, 'error': error})
  
+    
+def user_logout(request):
+    logout(request)
+    
+    return HttpResponseRedirect('/')
     
 def show_all_users(request):
     
