@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'allusers/', views.show_all_users),    #this must be deleted
     url(r'profile/', views.client_profile, name='client_profile'),
     url(r'login/', views.user_login, name='user_login'),
+    url(r'logout/', views.user_logout),
     url(r'^$', views.test)
 ]
