@@ -1,5 +1,5 @@
 """schedule URL Configuration
-
+ 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
 Examples:
@@ -16,14 +16,17 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from carwash import views
+from carwash import views, views_business
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'signup/', views.client_registration),
+    url(r'business/', views_business.owner_registration),
     url(r'allusers/', views.show_all_users),    #this must be deleted
-    url(r'profile/', views.client_profile, name='client_profile'),
+    url(r'owner_profile/', views_business.owner_profile, name='owner_profile'),
+    url(r'profile/', views.client_profile, name='client_profile'),    
     url(r'login/', views.user_login, name='user_login'),
+   # url(r'business_login/', views_business.owner_login, name='owner_login'),
     url(r'logout/', views.user_logout),
     url(r'^$', views.test)
 ]
