@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-#from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 from .forms import ClientRegistrationForm, LoginForm, ClientProfileForm
@@ -41,6 +40,8 @@ def client_profile(request):
     
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('user_login')) 
+    if hasattr(request.user, 'bis_profile'):
+            return HttpResponseRedirect(reverse('owner_profile'))
     
     if request.method == 'POST':
         form = ClientProfileForm(request.POST)
@@ -66,9 +67,13 @@ def user_login(request):
     '''View for user (client) login'''
     
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('client_profile'))
+        if hasattr(request.user, 'profile'):
+            return HttpResponseRedirect(reverse('client_profile'))
+        elif hasattr(request.user, 'bis_profile'):
+            return HttpResponseRedirect(reverse('owner_profile'))
     
     error = None
+    
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -77,7 +82,11 @@ def user_login(request):
         
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse('client_profile'))
+            
+            if hasattr(request.user, 'profile'):
+                return HttpResponseRedirect(reverse('client_profile'))
+            elif hasattr(request.user, 'bis_profile'):
+                return HttpResponseRedirect(reverse('owner_profile'))
         else:
             form = LoginForm()
             error = 'Login/password error'
