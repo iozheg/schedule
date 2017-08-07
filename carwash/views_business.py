@@ -9,7 +9,7 @@ from .forms_business import OwnerRegistrationForm, OwnerProfileForm
 def owner_registration(request):
     
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('owner_profile'))
+        return HttpResponseRedirect(reverse('owner-profile'))
     
     if request.method == 'POST':
         form = OwnerRegistrationForm(request.POST)
@@ -19,12 +19,12 @@ def owner_registration(request):
             
             login(request, user)
             
-            return HttpResponseRedirect(reverse('owner_profile'))
+            return HttpResponseRedirect(reverse('owner-profile'))
     
     else:
         form = OwnerRegistrationForm()
         
-    return render(request, 'business_registration.html', {'form': form, 'profile': reverse('owner_profile')})
+    return render(request, 'business_registration.html', {'form': form, 'profile': reverse('owner-profile')})
 
 
 def owner_profile(request):
@@ -35,16 +35,16 @@ def owner_profile(request):
     '''
     
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('owner_login'))
+        return HttpResponseRedirect(reverse('owner-login'))
     if hasattr(request.user, 'profile'):
-        return HttpResponseRedirect(reverse('client_profile'))
+        return HttpResponseRedirect(reverse('client-profile'))
     
     if request.method == 'POST':
         form = OwnerProfileForm(request.POST)
         
         if form.is_valid():
             form.save(request.user)
-            return HttpResponseRedirect(reverse('owner_profile'))
+            return HttpResponseRedirect(reverse('owner-profile'))
     
     else:        
         user = request.user
@@ -61,9 +61,9 @@ def owner_login(request):
     '''View for user (business) login'''
     
     if request.user.is_authenticated and request.user.profile:
-        return HttpResponseRedirect(reverse('client_profile'))
+        return HttpResponseRedirect(reverse('client-profile'))
     elif request.user.is_authenticated and request.user.bis_profile:
-        return HttpResponseRedirect(reverse('owner_profile'))
+        return HttpResponseRedirect(reverse('owner-profile'))
     
     action = '/business_login/'
     error = None
@@ -75,7 +75,7 @@ def owner_login(request):
         
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse('owner_profile'))
+            return HttpResponseRedirect(reverse('owner-profile'))
         else:
             form = LoginForm()
             error = 'Login/password error'
