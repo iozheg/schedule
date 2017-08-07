@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from carwash import views, views_business, views_schedule
+from carwash import views, views_business, views_schedule, views_checkin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -29,6 +29,8 @@ urlpatterns = [
    # url(r'business_login/', views_business.owner_login, name='owner_login'),
     url(r'logout/$', views.user_logout),
     url(r'addschedule/$', views_schedule.create_schedule),
+    url(r'addcheckin/$', views_checkin.create_checkin, name='add-checkin'),
     url(r'schedule/(?P<schedule_id>\d+)/$', views_schedule.schedule_details, name='schedule-details'),
+    #url(r'checkin/(?P<checkin_id>\d+)/$', views_checkin.checkin_details, name='checkin-details'),
     url(r'^$', views.test)
 ]
