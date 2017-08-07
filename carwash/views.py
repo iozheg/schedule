@@ -12,7 +12,7 @@ def test(request, *args, **kwargs):
 def client_registration(request):
     
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('client_profile'))
+        return HttpResponseRedirect(reverse('client-profile'))
     
     if request.method == 'POST':
         form = ClientRegistrationForm(request.POST)
@@ -22,7 +22,7 @@ def client_registration(request):
             
             login(request, user)
             
-            return HttpResponseRedirect(reverse('client_profile'))
+            return HttpResponseRedirect(reverse('client-profile'))
     
     else:
         form = ClientRegistrationForm()
@@ -39,16 +39,16 @@ def client_profile(request):
     '''
     
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('user_login')) 
+        return HttpResponseRedirect(reverse('user-login')) 
     if hasattr(request.user, 'bis_profile'):
-            return HttpResponseRedirect(reverse('owner_profile'))
+            return HttpResponseRedirect(reverse('owner-profile'))
     
     if request.method == 'POST':
         form = ClientProfileForm(request.POST)
         
         if form.is_valid():
             form.save(request.user)
-            return HttpResponseRedirect(reverse('client_profile'))
+            return HttpResponseRedirect(reverse('client-profile'))
     
     else:        
         user = request.user
@@ -68,9 +68,9 @@ def user_login(request):
     
     if request.user.is_authenticated:
         if hasattr(request.user, 'profile'):
-            return HttpResponseRedirect(reverse('client_profile'))
+            return HttpResponseRedirect(reverse('client-profile'))
         elif hasattr(request.user, 'bis_profile'):
-            return HttpResponseRedirect(reverse('owner_profile'))
+            return HttpResponseRedirect(reverse('owner-profile'))
     
     error = None
     
@@ -84,9 +84,9 @@ def user_login(request):
             login(request, user)
             
             if hasattr(request.user, 'profile'):
-                return HttpResponseRedirect(reverse('client_profile'))
+                return HttpResponseRedirect(reverse('client-profile'))
             elif hasattr(request.user, 'bis_profile'):
-                return HttpResponseRedirect(reverse('owner_profile'))
+                return HttpResponseRedirect(reverse('owner-profile'))
         else:
             form = LoginForm()
             error = 'Login/password error'
