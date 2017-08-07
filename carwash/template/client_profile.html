@@ -54,12 +54,23 @@
     </div>
     {% if owner %}
     <p>Schedules:</p>
+    
     {% for sch in user.bis_profile.schedule_set.all %}
-    <p>{{ sch.name }}</p>
+    <p>{{ forloop.counter }}. {{ sch.name }}</p>
     {% empty %}
     <p>No schedules</p>
     {% endfor %}
+    
+    {% elif client%}
+    <p>Checkins:</p>
+    {% for ch in user.profile.checkin_set.all %}
+    <p>{{ forloop.counter }}. {{ ch.date }} {{ ch.time }}</p>
+    {% empty %}
+    <p>No checkins</p>
+    {% endfor %}
+    
     {% endif %}
+    
     {% include 'current_user.html' %}
 </body>
 
