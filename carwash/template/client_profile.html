@@ -52,6 +52,14 @@
             <button type=submit>Log out</button>
         </form>
     </div>
+    {% if owner %}
+    <p>Schedules:</p>
+    {% for sch in user.bis_profile.schedule_set.all %}
+    <p>{{ sch.name }}</p>
+    {% empty %}
+    <p>No schedules</p>
+    {% endfor %}
+    {% endif %}
     {% include 'current_user.html' %}
 </body>
 
