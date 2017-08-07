@@ -76,7 +76,7 @@ class ScheduleCreateForm(forms.Form):
     active = forms.BooleanField(initial=True)
 
     def save(self, user):
-        self.cleaned_data['owner'] = user
+        self.cleaned_data['owner'] = user.bis_profile
         new_schedule = Schedule.objects.create(**self.cleaned_data)
 
 class ScheduleDetailsForm(forms.Form):
