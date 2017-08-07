@@ -54,7 +54,7 @@ def owner_profile(request):
         }
         form = OwnerProfileForm(initial=initial_data)
         
-    return render(request, 'client_profile.html', {'user': user, 'form': form})
+    return render(request, 'client_profile.html', {'user': user, 'form': form, 'owner': True})
 
 
 def owner_login(request):
