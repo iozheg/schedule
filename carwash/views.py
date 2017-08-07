@@ -60,7 +60,7 @@ def client_profile(request):
         }
         form = ClientProfileForm(initial=initial_data)
         
-    return render(request, 'client_profile.html', {'user': user, 'form': form})
+    return render(request, 'client_profile.html', {'user': user, 'form': form, 'client': True})
 
 
 def user_login(request):
