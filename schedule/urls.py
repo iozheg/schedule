@@ -31,6 +31,6 @@ urlpatterns = [
     url(r'addschedule/$', views_schedule.create_schedule),
     url(r'addcheckin/$', views_checkin.create_checkin, name='add-checkin'),
     url(r'schedule/(?P<schedule_id>\d+)/$', views_schedule.schedule_details, name='schedule-details'),
-    #url(r'checkin/(?P<checkin_id>\d+)/$', views_checkin.checkin_details, name='checkin-details'),
+    url(r'checkin/(?P<checkin_id>\d+)/$', views_checkin.checkin_details, name='checkin-details'),
     url(r'^$', views.test)
 ]
