@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
-from .models.checkin import CheckinCreateForm, Checkin
+from .models.checkin import CheckinCreateForm, Checkin, CheckinDetailsForm
 
 def create_checkin(request):
     
@@ -19,32 +19,19 @@ def create_checkin(request):
             
             return HttpResponseRedirect(reverse('client-profile'))
             
-    form = CheckinCreateForm()
+    else:
+        form = CheckinCreateForm()
     
     return render(request, 'create_checkin.html', {'form': form})
 
 
-def schedule_details(request, schedule_id):
+def checkin_details(request, checkin_id):
     
-    if request.method == 'POST':
+    try:
+        checkin = Checkin.objects.get(pk=checkin_id)
         
-        form = ScheduleDetailsForm(request.POST)
+    except Checkin.DoesNotExist:
+        checkin = None
         
-        if form.is_valid():
-            
-            form.save(schedule_id)
-            
-            return HttpResponseRedirect(reverse('schedule-details', args=(schedule_id,)))
-            
-    else:
-        
-        schedule = get_object_or_404(Schedule, pk=schedule_id)
-        
-        initial_data = {
-            
-        }
-        
-        form = ScheduleDetailsForm(initial=schedule.__dict__)
-        
-    return render(request, 'schedule_details.html', {'form': form, 'id': schedule_id})
+    return render(request, 'checkin_details.html', {'checkin': checkin})
 
