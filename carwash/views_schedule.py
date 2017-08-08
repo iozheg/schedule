@@ -16,7 +16,8 @@ def create_schedule(request):
             
             return HttpResponseRedirect(reverse('owner-profile'))
             
-    form = ScheduleCreateForm()
+    else:
+        form = ScheduleCreateForm()
     
     return render(request, 'create_schedule.html', {'form': form})
 
