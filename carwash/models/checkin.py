@@ -22,9 +22,19 @@ class CheckinCreateForm(forms.Form):
     time = forms.TimeField()
     schedule = forms.IntegerField()
     
+    def clean_schedule(self):
+        try:
+            self.cleaned_data['schedule'] = Schedule.objects.get(pk=self.cleaned_data['schedule'])
+            
+        except Schedule.DoesNotExist:
+            raise forms.ValidationError('No such schedule!', code='no-schedule')
+        
+        return self.cleaned_data['schedule']
+    
     def save(self, user):
         
         self.cleaned_data['client'] = user.profile
-        self.cleaned_data['schedule'] = Schedule.objects.get(pk=self.cleaned_data['schedule'])
-        
+                
         checkin = Checkin.objects.create(**self.cleaned_data)
+        
+        return checkin
