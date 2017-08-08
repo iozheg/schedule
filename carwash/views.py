@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import ClientRegistrationForm, LoginForm, ClientProfileForm
 
 def test(request, *args, **kwargs):
-	return HttpResponse('OK')
+	return render(request, 'index.html')
 
 
 def client_registration(request):
