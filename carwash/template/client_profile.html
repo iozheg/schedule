@@ -56,7 +56,7 @@
     <p>Schedules:</p>
     
     {% for sch in user.bis_profile.schedule_set.all %}
-    <p>{{ forloop.counter }}. {{ sch.name }}</p>
+    <p><a href='/schedule/{{ sch.id }}'>{{ forloop.counter }}. {{ sch.name }}</a></p>
     {% empty %}
     <p>No schedules</p>
     {% endfor %}
@@ -64,7 +64,7 @@
     {% elif client%}
     <p>Checkins:</p>
     {% for ch in user.profile.checkin_set.all %}
-    <p>{{ forloop.counter }}. {{ ch.date }} {{ ch.time }}</p>
+    <p><a href='/checkin/{{ ch.id }}'>{{ forloop.counter }}. {{ ch.date }} {{ ch.time }}</a></p>
     {% empty %}
     <p>No checkins</p>
     {% endfor %}
