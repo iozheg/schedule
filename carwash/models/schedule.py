@@ -42,11 +42,11 @@ class Schedule(models.Model):
     address = models.CharField(max_length=100)
     
     work_days = models.SmallIntegerField()
-    work_time_start = models.TimeField(blank=True)
-    work_time_end = models.TimeField(blank=True)
+    work_time_start = models.TimeField(blank=True, null=True)
+    work_time_end = models.TimeField(blank=True, null=True)
     
-    dinner_break_start = models.TimeField(blank=True)
-    dinner_break_end = models.TimeField(blank=True)
+    dinner_break_start = models.TimeField(blank=True, null=True)
+    dinner_break_end = models.TimeField(blank=True, null=True)
     
     time_interval = models.TimeField(default=datetime.time(0, 15))
     checkin_amount = models.SmallIntegerField(default=1)
