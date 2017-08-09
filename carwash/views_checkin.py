@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
-from .models.checkin import CheckinCreateForm, Checkin
+from .models.checkin import CheckinCreateForm, Checkin, CheckinAmountForm
 
 def create_checkin(request):
     
@@ -35,3 +35,23 @@ def checkin_details(request, checkin_id):
         
     return render(request, 'checkin_details.html', {'checkin': checkin})
 
+
+def checkin_amount(request):
+    
+    amount = None
+    
+    if request.method == 'POST':
+        
+        form = CheckinAmountForm(request.POST)
+        
+        if form.is_valid():
+            
+            amount = form.save()
+            
+    else:
+        
+        form = CheckinAmountForm()
+        
+    return render(
+        request, 'checkin_amount.html', {'form': form, 'amount': amount}
+    )
