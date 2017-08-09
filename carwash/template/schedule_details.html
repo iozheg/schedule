@@ -9,11 +9,18 @@
 </head>
 
 <body>
-	<form method="POST" action="/schedule/{{ id }}/">
+	<form method="POST" action="/schedule/{{ schedule.id }}/">
         {% csrf_token %}
         {{ form.as_p }}
         <button type='submit'>Save</button>
     </form>
+    
+    <div>
+        Checkins:
+        {% for ch in schedule.checkin_set.all %}
+        <p>{{ forloop.counter }}. {{ ch.date }}, {{ ch.time }}</p>
+        {% endfor %}
+    </div>
 </body>
 
 </html>

@@ -38,10 +38,6 @@ def schedule_details(request, schedule_id):
         
         schedule = get_object_or_404(Schedule, pk=schedule_id)
         
-        initial_data = {
-            
-        }
-        
         form = ScheduleDetailsForm(initial=schedule.__dict__)
         
-    return render(request, 'schedule_details.html', {'form': form, 'id': schedule_id})
+    return render(request, 'schedule_details.html', {'form': form, 'schedule': schedule})
