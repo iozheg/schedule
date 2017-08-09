@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
-from .models.checkin import CheckinCreateForm, Checkin, CheckinDetailsForm
+from .models.checkin import CheckinCreateForm, Checkin
 
 def create_checkin(request):
     
