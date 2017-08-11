@@ -9,9 +9,37 @@ class CheckinManager(models.Manager):
     
     def get_checkin_amount_by_datetime(self, schedule_id, date, time):
         
-        checkin_amount = Checkin.objects.filter(schedule=schedule_id, date=date, time=time).count()
+        checkin_amount = Checkin.objects.filter(
+                            schedule=schedule_id, date=date, 
+                            time=time
+                        ).count()
         
         return checkin_amount
+        
+    def add_checkin(self, schedule, date, time, client):
+        ''' Try add new checkin with date and time in schedule.
+        
+        Each schedule can have limited amount of checkins in same time
+        and date. We check if we can add one more. If so than create new
+        else return False
+        '''
+        
+        amount = self.get_checkin_amount_by_datetime(
+                            schedule.id, date, time
+                        )
+        
+        #try:
+            #schedule = Schedule.objects.get(id=schedule_id).checkin_amount
+        #except Schedule.DoesNotExist:
+            #return False
+        
+        if amount < schedule.checkin_amount:
+            checkin = Checkin.objects.create(
+                date=date, time=time, client=client, schedule=schedule
+            )
+            return checkin
+        else:
+            return False
         
 
 class Checkin(models.Model):
