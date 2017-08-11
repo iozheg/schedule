@@ -186,4 +186,64 @@ class ScheduleAndCheckinTests(TestCase):
             ),
             0
         ) 
+        
+    def test_add_checkin(self):
+        
+        self.assertTrue(
+            isinstance(Checkin.objects.add_checkin(
+                date=datetime.date(2017,8,10), time=datetime.time(8,35),
+                schedule=self.sch1, client=self.user2.profile
+            ), Checkin)
+        )        
+        self.assertIs(
+            Checkin.objects.add_checkin(
+                date=datetime.date(2017,8,10), time=datetime.time(8,35),
+                schedule=self.sch1, client=self.user2.profile
+            ),
+            False
+        )
+        
+        self.assertTrue(
+            isinstance(Checkin.objects.add_checkin(
+                date=datetime.date(2017,8,11), time=datetime.time(8,27),
+                schedule=self.sch2, client=self.user2.profile
+            ), Checkin)            
+        )        
+        self.assertIs(
+            Checkin.objects.add_checkin(
+                date=datetime.date(2017,8,11), time=datetime.time(8,27),
+                schedule=self.sch2, client=self.user2.profile
+            ),
+            False            
+        )
+        
+        self.assertTrue(
+            isinstance(Checkin.objects.add_checkin(
+                date=datetime.date(2017,7,10), time=datetime.time(8,35),
+                schedule=self.sch1, client=self.user2.profile
+            ), Checkin)
+        )
+        
+        self.assertTrue(
+            isinstance(Checkin.objects.add_checkin(
+                date=datetime.date(2017,7,11), time=datetime.time(8,27),
+                schedule=self.sch2, client=self.user2.profile
+            ), Checkin)
+        )
+        
+        for i in range(2):
+            self.assertTrue(
+                isinstance(Checkin.objects.add_checkin(
+                    date=datetime.date(2017,8,11), time=datetime.time(8,27),
+                    schedule=self.sch3, client=self.user2.profile
+                ), Checkin)
+            )
+            
+        self.assertIs(
+            Checkin.objects.add_checkin(
+                date=datetime.date(2017,8,11), time=datetime.time(8,27),
+                schedule=self.sch3, client=self.user2.profile
+            ),
+            False            
+        )
 
