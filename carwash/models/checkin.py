@@ -16,7 +16,7 @@ class CheckinManager(models.Manager):
         
         return checkin_amount
         
-    def add_checkin(self, schedule, date, time, client):
+    def add_checkin(self, schedule, date, time, client):    #change schedule to schedule_id? This model shouldn't know about another?
         ''' Try add new checkin with date and time in schedule.
         
         Each schedule can have limited amount of checkins in same time
@@ -75,7 +75,10 @@ class CheckinCreateForm(forms.Form):
         
         self.cleaned_data['client'] = user.profile
                 
-        checkin = Checkin.objects.create(**self.cleaned_data)
+        checkin = Checkin.objects.add_checkin(**self.cleaned_data)
+        
+        if not checkin:
+            raise forms.ValidationError('Can\'t add more checkin!', code='exceeded-amount')
         
         return checkin
 
