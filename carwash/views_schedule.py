@@ -41,3 +41,18 @@ def schedule_details(request, schedule_id):
         form = ScheduleDetailsForm(initial=schedule.__dict__)
         
     return render(request, 'schedule_details.html', {'form': form, 'schedule': schedule})
+
+
+def checkins_by_date(request, schedule_id):
+    """ for testing purposes """
+    import datetime
+    
+    schedule = Schedule.objects.get(id=schedule_id)
+    checkins = schedule.get_available_time_for_checkin(date=request.POST.get('checkin_date'))
+    
+ #   out = ' '.join(str(ch.time) for ch in checkins)
+    
+ #   for ch in checkins:
+ #       out += str(ch.time)
+        
+    return render(request, 'test_checkins_by_date.html', {'date': request.POST.get('checkin_date', 'oh!'), 'time': checkins})
