@@ -22,7 +22,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'signup/$', views.client_registration),
     url(r'business/$', views_business.owner_registration),
-    url(r'allusers/$', views.show_all_users),    #this must be deleted
     url(r'^owner_profile/$', views_business.owner_profile, name='owner-profile'),
     url(r'^profile/$', views.client_profile, name='client-profile'),    
     url(r'^login/$', views.user_login, name='user-login'),
@@ -33,5 +32,8 @@ urlpatterns = [
     url(r'schedule/(?P<schedule_id>\d+)/$', views_schedule.schedule_details, name='schedule-details'),
     url(r'checkin/(?P<checkin_id>\d+)/$', views_checkin.checkin_details, name='checkin-details'),
     url(r'checkinamount/', views_checkin.checkin_amount),
+    # below for testing purposes    
+    url(r'allusers/$', views.show_all_users),    #this must be deleted
+    url(r'schedule/(?P<schedule_id>\d+)/by_date/$', views_schedule.checkins_by_date),
     url(r'^$', views.test)
 ]
