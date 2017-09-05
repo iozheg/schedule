@@ -29,7 +29,7 @@ class ScheduleAndCheckinTests(TestCase):
             'description': 'this is first', 
             'tel_number': '89198181111', 
             'address': 'Tyumen, respubliki 169',
-            'work_days': 128,   
+            'work_days': 127,   
             'work_time_start': datetime.time(8, 0), 
             'work_time_end': datetime.time(22, 0),              
             'dinner_break_start': datetime.time(12, 0), 
@@ -45,7 +45,7 @@ class ScheduleAndCheckinTests(TestCase):
         self.sch2 = Schedule.objects.create(**{
             'name': 'second', 'description': 'second one', 
             'tel_number': '(919)5jg9875', 'address': 'hg374g73h4987', 
-            'work_days': 128, 'work_time_start': datetime.time(0, 0), 
+            'work_days': 127, 'work_time_start': datetime.time(0, 0), 
             'work_time_end': datetime.time(0, 0), 
             'dinner_break_start': None, 'dinner_break_end': None, 
             'checkin_amount': 1, 'time_interval': datetime.time(0, 15),
@@ -90,9 +90,6 @@ class ScheduleAndCheckinTests(TestCase):
         
         with self.assertRaisesMessage(Checkin.DoesNotExist, ''):
             Checkin.objects.get(pk=500)
-            
-        #with self.assertRaisesMessage(Checkin.DoesNotExist, ''):
-        #    Checkin.objects.get(schedule=Schedule.objects.get(pk=100))
             
     def test_Checkin_Schedule_relation(self):
         
@@ -247,3 +244,66 @@ class ScheduleAndCheckinTests(TestCase):
             False            
         )
 
+    def test_available_time_list(self):
+        
+        Checkin.objects.create(
+            date=datetime.date(2017,8,10), time=datetime.time(8,30),
+            schedule=self.sch1, client=self.user2.profile
+        )
+        
+        Checkin.objects.create(
+            date=datetime.date(2017,8,11), time=datetime.time(10,45),
+            schedule=self.sch2, client=self.user2.profile
+        )
+        
+        Checkin.objects.create(
+            date=datetime.date(2017,8,11), time=datetime.time(19,15),
+            schedule=self.sch2, client=self.user2.profile
+        )
+        
+        Checkin.objects.create(
+            date=datetime.date(2017,8,11), time=datetime.time(10,30),
+            schedule=self.sch3, client=self.user2.profile
+        )
+        
+        # This time is available
+        self.assertTrue(
+            "08:00:00" in self.sch1.get_available_time_for_checkin("2017-08-10")
+        )
+        self.assertTrue(
+            "08:30:00" in self.sch1.get_available_time_for_checkin("2017-08-11")
+        )
+        # This time is unavailable because of checkin
+        self.assertFalse(
+            "08:30:00" in self.sch1.get_available_time_for_checkin("2017-08-10")
+        )
+        # This time is unavailable because it's non-working time
+        self.assertFalse(
+            "07:00:00" in self.sch1.get_available_time_for_checkin("2017-08-10")
+        )
+
+        # This time is available
+        self.assertTrue(
+            "00:00:00" in self.sch2.get_available_time_for_checkin("2017-08-11")
+        )
+        # This time is unavailable because of checkin
+        self.assertFalse(
+            "10:45:00" in self.sch2.get_available_time_for_checkin("2017-08-11")
+        )
+        self.assertFalse(
+            "19:15:00" in self.sch2.get_available_time_for_checkin("2017-08-11")
+        )
+        
+        # This time is available
+        self.assertTrue(
+            "02:00:00" in self.sch3.get_available_time_for_checkin("2017-08-11")
+        )
+        # This time is available because of checkin_amount = 2
+        self.assertTrue(
+            "10:30:00" in self.sch3.get_available_time_for_checkin("2017-08-11")
+        )
+        # This date is non-working day
+        self.assertEqual(
+            self.sch3.get_available_time_for_checkin("2017-08-20"), 
+            "Non-working day"
+        )
