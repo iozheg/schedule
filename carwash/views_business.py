@@ -35,7 +35,7 @@ def owner_profile(request):
     '''
     
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('owner-login'))
+        return HttpResponseRedirect(reverse('user-login'))
     if hasattr(request.user, 'profile'):
         return HttpResponseRedirect(reverse('client-profile'))
     
