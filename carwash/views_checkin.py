@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.core.exceptions import PermissionDenied
 from django.urls import reverse
 
 from .models.checkin import CheckinCreateForm, Checkin, CheckinAmountForm
@@ -35,6 +36,17 @@ def checkin_details(request, checkin_id):
         
     return render(request, 'checkin_details.html', {'checkin': checkin})
 
+def cancel_checkin(request, checkin_id):
+    
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+    
+    checkin = get_object_or_404(Checkin, pk=checkin_id)
+    
+    if not checkin.cancel(request.user.profile.id):
+        raise PermissionDenied
+    
+    return HttpResponseRedirect(reverse('client-profile'))
 
 def checkin_amount(request):
     

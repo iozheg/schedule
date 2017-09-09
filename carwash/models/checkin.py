@@ -11,7 +11,7 @@ class CheckinManager(models.Manager):
         
         checkin_amount = Checkin.objects.filter(
                             schedule=schedule_id, date=date, 
-                            time=time
+                            time=time, active=True
                         ).count()
         
         return checkin_amount
@@ -40,7 +40,8 @@ class CheckinManager(models.Manager):
             return checkin
         else:
             return False
-        
+    
+    
 
 class Checkin(models.Model):
     """ Checkin model """
@@ -55,6 +56,15 @@ class Checkin(models.Model):
     
     objects = CheckinManager()
 
+    def cancel(self, user_id):
+        
+        if user_id != self.client.id:
+            return False
+        
+        self.active = False
+        self.save()
+        
+        return True
 
 class CheckinCreateForm(forms.Form):
     

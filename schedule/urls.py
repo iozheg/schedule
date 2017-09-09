@@ -20,19 +20,20 @@ from carwash import views, views_business, views_schedule, views_checkin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'signup/$', views.client_registration),
-    url(r'business/$', views_business.owner_registration),
+    url(r'^signup/$', views.client_registration),
+    url(r'^business/$', views_business.owner_registration),
     url(r'^owner_profile/$', views_business.owner_profile, name='owner-profile'),
     url(r'^profile/$', views.client_profile, name='client-profile'),    
     url(r'^login/$', views.user_login, name='user-login'),
    # url(r'business_login/', views_business.owner_login, name='owner_login'),
     url(r'logout/$', views.user_logout),
-    url(r'addschedule/$', views_schedule.create_schedule),
-    url(r'addcheckin/$', views_checkin.create_checkin, name='add-checkin'),
-    url(r'schedule/(?P<schedule_id>\d+)/$', views_schedule.schedule_details, name='schedule-details'),
-    url(r'checkin/(?P<checkin_id>\d+)/$', views_checkin.checkin_details, name='checkin-details'),
-    url(r'checkinamount/', views_checkin.checkin_amount),
-    # below for testing purposes    
+    url(r'^addschedule/$', views_schedule.create_schedule),
+    url(r'^addcheckin/$', views_checkin.create_checkin, name='add-checkin'),
+    url(r'^schedule/(?P<schedule_id>\d+)/$', views_schedule.schedule_details, name='schedule-details'),
+    url(r'^checkin/(?P<checkin_id>\d+)/$', views_checkin.checkin_details, name='checkin-details'),
+    url(r'^cancelcheckin/(?P<checkin_id>\d+)/$', views_checkin.cancel_checkin),
+    # below for testing purposes   
+    url(r'checkinamount/', views_checkin.checkin_amount), 
     url(r'allusers/$', views.show_all_users),    #this must be deleted
     url(r'schedule/(?P<schedule_id>\d+)/by_date/$', views_schedule.checkins_by_date),
     url(r'^$', views.test)

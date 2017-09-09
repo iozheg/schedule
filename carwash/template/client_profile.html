@@ -64,7 +64,10 @@
     {% elif client%}
     <p>Checkins:</p>
     {% for ch in user.profile.checkin_set.all %}
-    <p><a href='/checkin/{{ ch.id }}'>{{ forloop.counter }}. {{ ch.date }} {{ ch.time }}</a></p>
+    <p>
+        <a href='/checkin/{{ ch.id }}'>{{ forloop.counter }}. {{ ch.date }} {{ ch.time }}</a>
+        <button onclick="location.href='/cancelcheckin/{{ ch.id }}'">Cancel</button>
+    </p>
     {% empty %}
     <p>No checkins</p>
     {% endfor %}
