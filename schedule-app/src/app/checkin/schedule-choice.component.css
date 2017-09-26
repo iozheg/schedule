@@ -1,0 +1,25 @@
+.schedule-card{
+    display: inline-block;
+    background: lightgray;
+    margin: 6px;
+    width: 253px;    
+}
+.schedule-card:hover{
+    background: lightgreen;
+    cursor: pointer;
+}
+
+.float-right{
+    1float: left;
+}
+.line-end{
+    1clear: both;
+}
+
+/* dublicate with carwash-search */
+.horizontal-center{
+    max-width: 940px;
+    margin: 0 auto;
+
+    height: 100%;
+}
