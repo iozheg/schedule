@@ -1,0 +1,20 @@
+<md-toolbar color="primary" class="toolbar">
+
+        <span>НАМОЙКУ.РФ</span>
+        
+        <nav>
+            <a md-button>ЗАПИСАТЬСЯ</a>
+            <a md-button>CREATE SCHEDULE</a>
+            
+        </nav>
+        <span class="fill-remaining-space"></span>
+        
+        <button md-button [mdMenuTriggerFor]="menu">User</button>
+        <md-menu #menu="mdMenu">
+            <a md-menu-item>Profile</a>
+            <a md-menu-item>Checkins</a>
+            <a md-menu-item>Log out</a>
+        </md-menu>
+
+</md-toolbar>
+
