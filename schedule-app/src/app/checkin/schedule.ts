@@ -99,7 +99,10 @@ export class Schedule{
     }
 
     get workDays (): string {
-        
+        /*
+            Returns work days in format 'Mon Tue Wed ...'.
+            Using bitmask.
+        */ 
         let workDaysString: string = '';
 
         if (this.work_days == 127)
@@ -122,6 +125,7 @@ export class Schedule{
 
         return workDaysString;
     }
+    
     private preceding_0(value: Date): string {
         //add the preceding '0' to output string if hours or minutes <10
         let hoursStr = value.getHours() < 10 ? '0' + value.getHours() : value.getHours().toString();
