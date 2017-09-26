@@ -1,0 +1,13 @@
+.horizontal-center{
+    max-width: 940px;
+    margin: 0 auto;
+}
+.full-width{
+    width: 300px;
+}
+.search-title{
+    display: block;
+    width: 100%;
+    text-align: center;
+    color: #3A8FC8;
+}
