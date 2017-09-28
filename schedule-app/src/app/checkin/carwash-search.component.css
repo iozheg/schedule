@@ -1,9 +1,19 @@
 .horizontal-center{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    
     max-width: 940px;
-    margin: 0 auto;
+    height: 70vh;
+
+    _background-color: lightblue;
 }
 .full-width{
     width: 300px;
+    margin: 0 5px;
 }
 .search-title{
     display: block;

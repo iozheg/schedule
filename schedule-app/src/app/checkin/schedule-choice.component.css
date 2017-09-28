@@ -18,8 +18,14 @@
 
 /* dublicate with carwash-search */
 .horizontal-center{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    _justify-content: center;
+    align-items: center;
+    align-content: flex-start;
+    
     max-width: 940px;
-    margin: 0 auto;
-
-    height: 100%;
+    height: 70vh;
+    padding-top: 20px;
 }

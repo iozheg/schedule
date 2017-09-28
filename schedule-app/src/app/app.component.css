@@ -1,6 +1,23 @@
-.vertical-center{
+.app-nav{
+  min-width: 100%;
+}
+
+.flex-container{
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  min-height: 90%;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: space-between;
+  
+  height: 100%;
+}
+
+._footer{
+  background-color: lightblue;
+  
+  height: 100px;
+  width: 100%;
+  
+  align-self: flex-end;
 }
