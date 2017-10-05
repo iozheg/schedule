@@ -1,0 +1,15 @@
+<md-button-toggle-group class="toggle-group" #group="mdButtonToggleGroup">
+    <md-button-toggle 
+        *ngFor="let time of timeArray; let i=index" 
+        [disabled]="i%3==0"
+        [class.inactive]="i%3==0"
+        value="time"
+        class="toggle-button">
+        {{ time }}
+    </md-button-toggle>
+</md-button-toggle-group>
+<a md-button
+    color="primary" 
+    class="back-button"
+    [routerLink]="['/']">
+    Back</a>
