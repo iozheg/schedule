@@ -1,0 +1,29 @@
+.schedule-card{
+    display: inline-block;
+    background: lightgray;
+    margin: 6px;
+    width: 253px;    
+}
+.schedule-card:hover{
+    background: lightgreen;
+    cursor: pointer;
+}
+
+/* some dublicate styles with carwash-search */
+.horizontal-center{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: flex-start;
+    
+    max-width: 940px;
+    height: 50vh;
+    padding-top: 20px;
+}
+
+.back-button{
+    display: block;
+    margin: 30px 0;
+    width: 150px;
+}
