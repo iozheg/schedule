@@ -52,23 +52,6 @@ export class Schedule{
 
         if(isNaN(this.work_time_start.getTime()) || isNaN(this.work_time_end.getTime()))
             return 'around the clock';
-        
-        //add the preceding '0' to output string if hours or minutes <10
-     /*   let startHours: number = this.work_time_start.getHours();
-        let startHoursStr: string;
-        let startMinutes: number = this.work_time_start.getMinutes();
-        let startMinutesStr: string;
-
-        startHoursStr = startHours < 10 ? '0' + startHours : startHours.toString();
-        startMinutesStr = startMinutes < 10 ? '0' + startMinutes : startMinutes.toString();
-
-        let endHours: number = this.work_time_end.getHours();
-        let endHoursStr: string;
-        let endMinutes: number = this.work_time_end.getMinutes();
-        let endMinutesStr: string;
-
-        endHoursStr = endHours < 10 ? '0' + endHours : endHours.toString();
-        endMinutesStr = endMinutes < 10 ? '0' + endMinutes : endMinutes.toString();*/
 
         return this.preceding_0(this.work_time_start)
                 + " - " + this.preceding_0(this.work_time_end);
@@ -88,12 +71,12 @@ export class Schedule{
     }
 
     get timeInterval (): string {
-        //Return time interval in format 'hh:mm'
+        // Return time interval in format 'hh:mm'
         return this.preceding_0(this.time_interval);
     }
 
     get createDate (): string {
-        //Return create date in format 'dd.mm.yyyy'
+        // Return create date in format 'dd.mm.yyyy'
         return this.create_date.getDate() + '.' + this.create_date.getMonth() 
                 + '.' + this.create_date.getFullYear();
     }
@@ -127,7 +110,7 @@ export class Schedule{
     }
     
     private preceding_0(value: Date): string {
-        //add the preceding '0' to output string if hours or minutes <10
+        // Add the preceding '0' to output string if hours or minutes <10
         let hoursStr = value.getHours() < 10 ? '0' + value.getHours() : value.getHours().toString();
         let minutesStr = value.getMinutes() < 10 ? '0' + value.getMinutes() : value.getMinutes().toString();
 
