@@ -30,8 +30,13 @@
     //&:hover { background-color: $primary-color-light;}
 }
 
-
 .inactive{
     color: lightgray;
     //&:hover { background-color: white}
+}
+
+//same as schedule choice
+.back-button{
+    display: block;
+    margin: 30px 0;
 }
