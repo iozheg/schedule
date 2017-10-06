@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap} from '@angular/router';
+import { ActivatedRoute, ParamMap, Router} from '@angular/router';
 
 import { Schedule } from '../schedule';
 import { TimeRangeClass } from '../../time';
+import { SearchParamService } from '../search-param.service';
 import { SCHEDULES, getScheduleById } from '../mock-schedules';
 
 @Component({
@@ -13,24 +14,31 @@ import { SCHEDULES, getScheduleById } from '../mock-schedules';
 
 export class TimeChoiceComponent implements OnInit {
 
-    scheduleId: string;
+    scheduleId: number;
     selectedSchedule: Schedule;
     date: string;
     timeArray: string[];
 
     constructor(
-        private route: ActivatedRoute
+    //    private route: ActivatedRoute,
+        private router: Router,
+        private searchParam: SearchParamService
     ) { }
 
     ngOnInit() { 
-        this.scheduleId = this.route.snapshot.paramMap.get('scheduleId') || 'none';
-        this.date = this.route.snapshot.paramMap.get('date') || 'none';
 
-        this.selectedSchedule = getScheduleById(+this.scheduleId);
-
-        let timeRange = new TimeRangeClass(this.selectedSchedule.workTime);
-        this.timeArray = timeRange.getTimeRangeStringArray(this.selectedSchedule.timeInterval);
+        // if no schedule id (i.e. url entered manualy) we should return to /schedule
+        if(this.searchParam.selectedScheduleId === undefined)
+            this.router.navigate(['/schedules']);
         
+        else{
+            this.scheduleId = this.searchParam.selectedScheduleId;
+        //    this.date = this.searchParam.date;
 
+            this.selectedSchedule = getScheduleById(this.scheduleId);
+
+            let timeRange = new TimeRangeClass(this.selectedSchedule.workTime);
+            this.timeArray = timeRange.getTimeRangeStringArray(this.selectedSchedule.timeInterval);
+        }
     }
 }

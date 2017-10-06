@@ -5,6 +5,7 @@ import { Router, ActivatedRoute, ParamMap} from '@angular/router';
 //import { Observable } from 'rxjs/Observable';
 
 import { Schedule } from '../schedule';
+import { SearchParamService } from '../search-param.service';
 import { SCHEDULES } from '../mock-schedules';
 
 @Component({
@@ -16,20 +17,22 @@ import { SCHEDULES } from '../mock-schedules';
 export class ScheduleChoiceComponent implements OnInit {
     
     carwashName: string;
-    date: string;
+    date: Date;
     schedules = SCHEDULES;
     
     constructor(
         private router: Router,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private searchParam: SearchParamService
     ) {}
 
     ngOnInit() { 
-        this.carwashName = this.route.snapshot.paramMap.get('carwashName') || 'none';
-        this.date = this.route.snapshot.paramMap.get('date') || 'none';
+        this.carwashName = this.searchParam.carwashName;
+        this.date = this.searchParam.date || new Date();
     }
 
     scheduleClick(id): void{
-        this.router.navigate(['/schedules/time', {scheduleId: id, date: this.date}]);
+        this.searchParam.selectedScheduleId = id;
+        this.router.navigate(['/schedules/time']);
     }
 }

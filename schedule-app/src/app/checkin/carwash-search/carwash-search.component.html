@@ -2,7 +2,7 @@
     <span class="search-title"><h1>Search carwash in Tyumen</h1></span>
     <!-- <form> -->
         <md-form-field class="full-width">
-            <input mdInput [(ngModel)]="carwashName" placeholder="Carwash">
+            <input mdInput [(ngModel)]="carwashName" placeholder="Carwash (optional)">
         </md-form-field>
         <md-form-field class="full-width">
             <input mdInput 
@@ -17,8 +17,9 @@
         
         <a md-raised-button 
             color="primary" 
-            class="full-width" 
-            [routerLink]="['schedules', {carwashName: carwashName, date: date}]">
+            class="full-width"
+            (click)="searchButtonClick()" 
+            >
         Search</a>
-    <!-- </form> -->
+    <!-- </form> [routerLink]="['schedules', {carwashName: carwashName}]"-->
 </div>
