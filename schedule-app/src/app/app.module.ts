@@ -14,6 +14,7 @@ import { MatButtonToggleModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { AppNavComponent } from './app-nav/app-nav.component';
+import { SearchParamService } from './checkin/search-param.service';
 import { CarwashSearchComponent } from './checkin/carwash-search/carwash-search.component';
 import { ScheduleChoiceComponent } from './checkin/schedule-choice/schedule-choice.component';
 import { TimeChoiceComponent } from './checkin/time-choice/time-choice.component';
@@ -43,7 +44,7 @@ import { AppRoutingModule } from './app-routing.module';
     MatButtonToggleModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [SearchParamService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
