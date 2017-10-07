@@ -1,0 +1,17 @@
+/* some dublicate styles with carwash-search */
+.horizontal-center{
+    _display: flex;
+    _flex-direction: row;
+    _flex-wrap: wrap;
+    _align-items: center;
+    _align-content: flex-start;
+    
+    max-width: 940px;
+    height: 50vh;
+    padding-top: 20px;
+}
+
+.finish-header{
+    width: 100%;
+    text-align: center;
+}
