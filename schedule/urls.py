@@ -36,5 +36,8 @@ urlpatterns = [
     url(r'checkinamount/', views_checkin.checkin_amount), 
     url(r'allusers/$', views.show_all_users),    #this must be deleted
     url(r'schedule/(?P<schedule_id>\d+)/by_date/$', views_schedule.checkins_by_date),
+
+    url(r'^api/schedules/$', views_schedule.get_schedules),
+
     url(r'^$', views.test)
 ]
