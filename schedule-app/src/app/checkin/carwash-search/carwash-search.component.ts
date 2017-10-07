@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 import { SearchParamService } from '../search-param.service';
+
 
 @Component({
     selector: 'carwash-search',
@@ -17,12 +19,15 @@ export class CarwashSearchComponent implements OnInit {
 
     constructor( 
         private searchParam: SearchParamService,
-        private router: Router
+        private router: Router,
+        private http: HttpClient
     ) { }
 
     ngOnInit() { 
         this.carwashName = this.searchParam.carwashName;
         this.datepickerDate = this.searchParam.date || new Date();
+
+        this.http.get('127.0.0.1')
     }
 
     onChange(event: any): void{
