@@ -1,12 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap} from '@angular/router';
+import { Router } from '@angular/router';
 
 //import 'rxjs/add/operator/switchMap';
 //import { Observable } from 'rxjs/Observable';
 
 import { Schedule } from '../schedule';
 import { SearchParamService } from '../search-param.service';
-import { SCHEDULES } from '../mock-schedules';
+import { SCHEDULES, getScheduleById } from '../mock-schedules';
 
 @Component({
     //selector: 'schedule-choice',
@@ -22,7 +22,6 @@ export class ScheduleChoiceComponent implements OnInit {
     
     constructor(
         private router: Router,
-        private route: ActivatedRoute,
         private searchParam: SearchParamService
     ) {}
 
@@ -32,7 +31,10 @@ export class ScheduleChoiceComponent implements OnInit {
     }
 
     scheduleClick(id): void{
+        this.searchParam.date = this.date;
         this.searchParam.selectedScheduleId = id;
+        this.searchParam.carwashName = getScheduleById(id).name;
+        
         this.router.navigate(['/schedules/time']);
     }
 }
