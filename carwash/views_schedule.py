@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
+from django.core import serializers
 
 from .models.schedule import ScheduleCreateForm, ScheduleDetailsForm, Schedule
 
@@ -56,3 +57,13 @@ def checkins_by_date(request, schedule_id):
  #       out += str(ch.time)
         
     return render(request, 'test_checkins_by_date.html', {'date': request.POST.get('checkin_date', 'oh!'), 'time': checkins})
+
+def get_schedules(request):
+    """ Returns all schedules. For testing http requests from Angular app """
+
+    name = request.GET.get('name');
+
+    schedules = Schedule.objects.filter(name__startswith=name);
+    schedules_names = { 'schedules': [s.name for s in schedules]}
+    
+    return JsonResponse(schedules_names)
