@@ -2,8 +2,20 @@
     <span class="search-title"><h1>Search carwash in Tyumen</h1></span>
     <!-- <form> -->
         <md-form-field class="full-width">
-            <input mdInput [(ngModel)]="carwashName" placeholder="Carwash (optional)">
-        </md-form-field>
+            <input mdInput 
+                #searchBox
+                [(ngModel)]="carwashName" 
+                (keyup)="searchSchedulesByName(searchBox.value)"
+                placeholder="Carwash (optional)"                
+                [mdAutocomplete]="autoComplete">
+
+                <md-autocomplete #autoComplete="mdAutocomplete">
+                    <md-option *ngFor="let option of schedulesNames | async" [value]="option">
+                        {{ option }}
+                    </md-option>
+                </md-autocomplete>
+        </md-form-field>       
+
         <md-form-field class="full-width">
             <input mdInput 
                 [mdDatepicker]="picker" 
@@ -11,6 +23,7 @@
                 (dateChange)="onChange($event)"
                 name="dateInput"
                 placeholder="Choose a date">
+           
             <md-datepicker-toggle mdSuffix [for]="picker"></md-datepicker-toggle>
             <md-datepicker #picker></md-datepicker>
         </md-form-field>
