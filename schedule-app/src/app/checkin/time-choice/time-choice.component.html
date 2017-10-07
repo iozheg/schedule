@@ -1,9 +1,9 @@
-<md-button-toggle-group class="toggle-group" #group="mdButtonToggleGroup">
+<md-button-toggle-group class="toggle-group mat-typography" [(ngModel)]='selectedTime' #group="mdButtonToggleGroup">
     <md-button-toggle 
         *ngFor="let time of timeArray; let i=index" 
         [disabled]="i%3==0"
         [class.inactive]="i%3==0"
-        value="time"
+        value={{time}}
         class="toggle-button">
         {{ time }}
     </md-button-toggle>
@@ -14,5 +14,10 @@
     class="back-button"
     [routerLink]="['/schedules/']">
     Back</a>
+    <a md-raised-button
+    color="accent" 
+    class="back-button"
+    (click)="checkinButtonClick()">
+    Checkin</a>
 </md-button-toggle-group>
 

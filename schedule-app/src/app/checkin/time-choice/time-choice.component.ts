@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router} from '@angular/router';
+import { Router} from '@angular/router';
 
 import { Schedule } from '../schedule';
 import { TimeRangeClass } from '../../time';
@@ -18,6 +18,7 @@ export class TimeChoiceComponent implements OnInit {
     selectedSchedule: Schedule;
     date: string;
     timeArray: string[];
+    selectedTime: string;
 
     constructor(
     //    private route: ActivatedRoute,
@@ -40,5 +41,10 @@ export class TimeChoiceComponent implements OnInit {
             let timeRange = new TimeRangeClass(this.selectedSchedule.workTime);
             this.timeArray = timeRange.getTimeRangeStringArray(this.selectedSchedule.timeInterval);
         }
+    }
+
+    checkinButtonClick(){
+        this.searchParam.time = this.selectedTime;
+        this.router.navigate(['/schedules/checkin']);
     }
 }
