@@ -12,10 +12,12 @@ import { MdDatepickerModule } from '@angular/material';
 import { MdNativeDateModule } from '@angular/material';
 import { MdCardModule } from '@angular/material';
 import { MatButtonToggleModule } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { AppNavComponent } from './app-nav/app-nav.component';
 import { SearchParamService } from './checkin/search-param.service';
+import { ScheduleService } from './schedule.service';
 import { CarwashSearchComponent } from './checkin/carwash-search/carwash-search.component';
 import { ScheduleChoiceComponent } from './checkin/schedule-choice/schedule-choice.component';
 import { TimeChoiceComponent } from './checkin/time-choice/time-choice.component';
@@ -46,9 +48,10 @@ import { AppRoutingModule } from './app-routing.module';
     MdNativeDateModule,
     MdCardModule,
     MatButtonToggleModule,
+    MatAutocompleteModule,
     AppRoutingModule
   ],
-  providers: [SearchParamService],
+  providers: [SearchParamService, ScheduleService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
