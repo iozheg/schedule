@@ -1,11 +1,24 @@
+<div class='horizontal-center' *ngIf='selectedSchedule'>
+    <md-card style="width:100%;">
+        <md-card-header>
+            <md-card-title>{{ selectedSchedule.name }}</md-card-title>
+            <md-card-subtitle>{{ selectedSchedule.owner}}</md-card-subtitle>        
+        </md-card-header>
+        <md-card-content>
+            workTime: {{ selectedSchedule.workTime }}<br>
+            dinnerTime: {{ selectedSchedule.dinnerTime }}<br>
+            description: {{ selectedSchedule.description }}
+        </md-card-content>
+    </md-card>
+</div>
 <md-button-toggle-group class="toggle-group mat-typography" [(ngModel)]='selectedTime' #group="mdButtonToggleGroup">
     <md-button-toggle 
         *ngFor="let time of timeArray; let i=index" 
-        [disabled]="i%3==0"
-        [class.inactive]="i%3==0"
-        value={{time}}
+        [class.inactive]="time.status=='occupied'"
+        [disabled]="time.status=='occupied'"
+        value={{time.value}}
         class="toggle-button">
-        {{ time }}
+        {{ time.time }}
     </md-button-toggle>
  
     <div style="width: 100%;"></div>
