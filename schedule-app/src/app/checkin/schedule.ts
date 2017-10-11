@@ -1,3 +1,5 @@
+import { TimeRangeClass, ExtendedDateClass, DateRangeClass } from '../time';
+
 export class Schedule{
 
     id: number;
@@ -21,6 +23,10 @@ export class Schedule{
 
     owner: number;
 
+    containsTimeAfterMidnight: boolean;
+    timeRange: DateRangeClass;
+    dinnerTimeRange: DateRangeClass;
+
     constructor(schedule){
         this.id = schedule.id;
         
@@ -30,18 +36,21 @@ export class Schedule{
         this.address = schedule.address || 'none';
     
         this.work_days = schedule.work_days || 'none';
-        this.work_time_start = new Date(schedule.work_time_start);
-        this.work_time_end = new Date(schedule.work_time_end);
-        this.dinner_break_start = new Date(schedule.dinner_break_start);
-        this.dinner_break_end = new Date(schedule.dinner_break_end);
+        this.work_time_start = ExtendedDateClass.dateSetTime(new Date(), schedule.work_time_start + "");
+        this.work_time_end = ExtendedDateClass.dateSetTime(new Date(), schedule.work_time_end + "");
+        this.dinner_break_start = ExtendedDateClass.dateSetTime(new Date(), schedule.dinner_break_start + "");
+        this.dinner_break_end = ExtendedDateClass.dateSetTime(new Date(), schedule.dinner_break_end + "");
     
-        this.time_interval = new Date(schedule.time_interval);
+        this.time_interval = ExtendedDateClass.dateSetTime(new Date(), schedule.time_interval + "");
         this.checkin_amount = schedule.checkin_amount || 'none';
     
         this.active = schedule.active || 'none';
         this.create_date = new Date(schedule.create_date);
     
         this.owner = schedule.owner || 'none';
+
+        this.containsTimeAfterMidnight = this.work_time_start >= this.work_time_end;
+        console.log(this);
     }
 
     get workTime (): string {
@@ -64,7 +73,7 @@ export class Schedule{
         */ 
 
         if(isNaN(this.dinner_break_start.getTime()) || isNaN(this.dinner_break_end.getTime()))
-            return 'around the clock';
+            return 'no dinner';
                 
         return this.preceding_0(this.dinner_break_start)
                 + " - " + this.preceding_0(this.dinner_break_end);
@@ -115,5 +124,69 @@ export class Schedule{
         let minutesStr = value.getMinutes() < 10 ? '0' + value.getMinutes() : value.getMinutes().toString();
 
         return hoursStr + ":" + minutesStr;
+    }
+/*
+    private _setTime(timeString: string): Date{
+        " Return Date from string 'hh:mm:ss' "
+
+        let date = new Date();
+        try{
+            let timeArray = timeString.split(":");
+            
+            date.setSeconds(0);
+            date.setHours(+timeArray[0]);
+            date.setMinutes(+timeArray[1]);
+        }
+        catch(error){
+            // If string is not in format 'hh:mm:ss' than
+            // return null
+            date = null;
+        }
+
+        return date;
+    }*/
+
+    createTimeArray(date: Date){
+
+        console.time('Creation time array');
+/*
+        
+        if(this.containsTimeAfterMidnight){
+            this.work_time_end = ExtendedDateClass.dateSetOnlyDate(
+                this.work_time_end, 
+                ExtendedDateClass.dateAdd(date, 'day', 1)
+            );
+        }
+        else{
+            this.work_time_end = ExtendedDateClass.dateSetOnlyDate(
+                this.work_time_end, 
+                date
+            );
+        }*/
+        
+        this.work_time_start = ExtendedDateClass.dateSetOnlyDate(this.work_time_start, date);
+        this.work_time_end = ExtendedDateClass.dateSetOnlyDate(this.work_time_end, date);
+     
+        if(this.containsTimeAfterMidnight)
+            this.work_time_end = ExtendedDateClass.dateAdd(this.work_time_end, 'day', 1);
+        
+        this.timeRange = new DateRangeClass(
+            this.work_time_start, 
+            this.work_time_end, 
+            this.time_interval
+        )
+
+        this.dinner_break_start = ExtendedDateClass.dateSetOnlyDate(this.dinner_break_start, date);
+        this.dinner_break_end = ExtendedDateClass.dateSetOnlyDate(this.dinner_break_end, date);
+        this.timeRange.excludeRangev2(this.dinner_break_start, this.dinner_break_end);
+
+        console.timeEnd('Creation time array');
+    }
+
+    markOccupiedTime(time_list: Date[]){
+        console.log(time_list);
+        time_list.forEach( elem => {
+            this.timeRange.excludeDate(elem);
+        });
     }
 }
