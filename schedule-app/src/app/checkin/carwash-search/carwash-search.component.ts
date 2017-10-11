@@ -53,7 +53,7 @@ export class CarwashSearchComponent implements OnInit {
             .debounceTime(300)
             .distinctUntilChanged()
             .switchMap( term => term 
-                ? this.scheduleService.searchSchedulesByName(term)
+                ? this.scheduleService.getNamesOfSchedules(term)
                 : Observable.of<string[]>([]))
             .catch(error => {
                 // TODO: add real error handling
