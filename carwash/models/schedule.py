@@ -103,7 +103,72 @@ class Schedule(models.Model):
             return "Non-working day"
         
         return time_list
+
+    def get_occupied_time(self, date):
         
+        from collections import Counter
+        
+        date = datetime.datetime.strptime(date.split("T")[0], '%Y-%m-%d')
+    #    date = datetime.datetime(date)
+        time_list = []
+    #    time_list = self.get_time_list()
+                           
+        # Get all checkins at this date for this schedule.
+        checkins_by_date = self.checkin_set.filter(date=date)
+        # Get set of time property of checkins (nonrepeating).
+        checkin_times = [
+            datetime.datetime.combine(ch.date, ch.time) for ch in checkins_by_date
+        ]
+    
+        checkin_times_counted = Counter(checkin_times)
+
+        for t in checkin_times_counted:
+            if checkin_times_counted[t] >= self.checkin_amount:
+                time_list.append(t)
+
+        return time_list
+    
+    def get_time_list_v2(self):
+        
+        """
+            Algorithm:
+            1. Get start point (current) as today date 
+            + work_time_start.
+            2. Define if work_time_end is after midnight or not.
+            (in other words, id start and end time are belongs
+            different dates).
+            3a. If work_time_end is before midnight, than end
+            point: today + work_time_end.
+            3b. Else end poind is today + one day + work_time_end.
+            4. Get timedelta from time_interval.
+            5. Using timedelta go from start time to end.
+        """
+
+        time_list = []
+        current = datetime.datetime.combine(
+            datetime.datetime.today(), self.work_time_start
+        )
+
+        if self.work_time_start > self.work_time_end:
+            end = datetime.datetime.combine(
+                datetime.datetime.today() + datetime.timedelta(days=1),
+                self.work_time_end
+            )
+        else:
+            end = datetime.datetime.combine(
+                datetime.datetime.today(), self.work_time_end
+            )
+
+        delta = datetime.timedelta(
+                    minutes=self.time_interval.minute
+                )
+
+        current_date = current.date()
+
+        while current <= end:
+            time_list.append(str(current.time()))
+            current += delta
+
     def get_time_list(self):
         
         # Make list of all available time for this schedule.
@@ -116,7 +181,8 @@ class Schedule(models.Model):
                 )            
         # If around the clock
         # current_date helps us detect, that next day started and
-        # we must stop generating time list
+        # we must stop generating time list.
+        # If work_time_start == work_time_end than around the clock.
         current_date = current.date()
         if self.work_time_start != self.work_time_end:
             while (current.time() <= self.work_time_end
