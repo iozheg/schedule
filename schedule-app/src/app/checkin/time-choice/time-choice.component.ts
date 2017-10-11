@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router} from '@angular/router';
 
 import { Schedule } from '../schedule';
-import { TimeRangeClass } from '../../time';
+import { TimeRangeClass, DateTimeClass, ExtendedDateClass } from '../../time';
 import { SearchParamService } from '../search-param.service';
+import { ScheduleService } from '../../schedule.service';
 import { SCHEDULES, getScheduleById } from '../mock-schedules';
 
 @Component({
@@ -16,14 +17,16 @@ export class TimeChoiceComponent implements OnInit {
 
     scheduleId: number;
     selectedSchedule: Schedule;
-    date: string;
-    timeArray: string[];
+    selectedDate: Date;
+    timeArray: DateTimeClass[];
     selectedTime: string;
+    ready: boolean = false;
 
     constructor(
     //    private route: ActivatedRoute,
         private router: Router,
-        private searchParam: SearchParamService
+        private searchParam: SearchParamService,
+        private scheduleService: ScheduleService
     ) { }
 
     ngOnInit() { 
@@ -34,14 +37,46 @@ export class TimeChoiceComponent implements OnInit {
         
         else{
             this.scheduleId = this.searchParam.selectedScheduleId;
+            this.selectedDate = this.searchParam.date
+
+            this.scheduleService.getScheduleDetailInfo(this.scheduleId)
+                .then( schedule => {
+                    this.selectedSchedule = schedule;
+                    this.selectedSchedule.createTimeArray(this.selectedDate);
+                    this.timeArray = this.selectedSchedule.timeRange.dateRange;
+                })
+                .then(() => this.scheduleService.getOccupiedTime(this.scheduleId, this.selectedDate.toISOString())
+                    .then(list => this.selectedSchedule.markOccupiedTime(list))   
+                )
+                .then(() => {
+                    if(this.selectedSchedule.containsTimeAfterMidnight){                        
+                        this.scheduleService.getOccupiedTime(this.scheduleId, ExtendedDateClass.dateAdd(this.selectedDate, 'day', 1).toISOString())
+                            .then(list => this.selectedSchedule.markOccupiedTime(list))
+                    }
+                });
+            
+/*
+            if(this.selectedSchedule.work_time_start > this.selectedSchedule.work_time_end){
+
+                this.scheduleService.getOccupiedTime(this.scheduleId, this.date, true)
+                    .then(list => console.log(list)); 
+            }*/
+/*
+            this.scheduleService.getAvailableTimeForCheckin(this.scheduleId, this.date)
+                .then( time_list => this.timeArray = time_list);*/
         //    this.date = this.searchParam.date;
 
-            this.selectedSchedule = getScheduleById(this.scheduleId);
-
-            let timeRange = new TimeRangeClass(this.selectedSchedule.workTime);
-            this.timeArray = timeRange.getTimeRangeStringArray(this.selectedSchedule.timeInterval);
+            
         }
     }
+/*
+    createTimeArray(): void {
+        let timeRange = new TimeRangeClass(
+            this.selectedSchedule.workTime, 
+            this.selectedSchedule.dinnerTime
+        );
+        this.timeArray = timeRange.getTimeRangeStringArray(this.selectedSchedule.timeInterval);
+    }*/
 
     checkinButtonClick(){
         this.searchParam.time = this.selectedTime;
