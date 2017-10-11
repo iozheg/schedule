@@ -37,7 +37,11 @@ urlpatterns = [
     url(r'allusers/$', views.show_all_users),    #this must be deleted
     url(r'schedule/(?P<schedule_id>\d+)/by_date/$', views_schedule.checkins_by_date),
 
-    url(r'^api/schedules/$', views_schedule.get_schedules),
+    url(r'^api/search/$', views_schedule.get_schedules_names),
+    url(r'^api/schedule/(?P<schedule_id>\d+)$', views_schedule.get_schedule_detail_info),
+    url(r'^api/schedule/(?P<schedule_id>\d+)/occupied$', views_schedule.get_occupied_time),
+    url(r'^api/schedules/$', views_schedule.get_schedules_brief_info),
+    url(r'^api/schedule/(?P<schedule_id>\d+)/available$', views_schedule.get_available_time_for_checkin),
 
     url(r'^$', views.test)
 ]
