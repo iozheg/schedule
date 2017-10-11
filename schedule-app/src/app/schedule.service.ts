@@ -3,9 +3,15 @@ import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
+
+import { Schedule } from './checkin/schedule';
 
 @Injectable()
 export class ScheduleService {
+
+    private response: Schedule[];
+
     constructor(
         private httpClient: HttpClient
     ) { }
@@ -15,9 +21,44 @@ export class ScheduleService {
             .subscribe(data => {console.log(data);});
     }
 
-    searchSchedulesByName(term: string): Observable<string[]>{
+    getNamesOfSchedules(term: string): Observable<string[]>{
         return this.httpClient
-            .get('api/schedules/?name=' + term)
+            .get('api/search/?name=' + term)
             .map(response => response['schedules'] as string[]);
+    }
+
+    getSchedulesBriefInfo(name: string): Promise<Schedule[]> {
+        return this.httpClient
+            .get('api/schedules/?name=' + name)
+            .toPromise()
+            .then(response => 
+                response['schedules'].map(
+                    element => new Schedule(element)
+                )
+            );
+    }
+
+    getScheduleDetailInfo(id: number): Promise<Schedule> {
+        return this.httpClient
+            .get('api/schedule/' + id)
+            .toPromise()
+            .then(response => new Schedule(response['schedule']));
+    }
+
+    getAvailableTimeForCheckin(scheduleId: number, date: string): Promise<string[]>{
+        return this.httpClient
+            .get('api/schedule/' + scheduleId + '/available?date=' + date)
+            .toPromise()
+            .then( response => response['time']);
+    }
+
+    getOccupiedTime(schedule_id: number, date: string): Promise<Date[]>{
+        return this.httpClient
+            .get('api/schedule/' + schedule_id + '/occupied?date=' + date)
+            .toPromise()
+            .then(response => 
+                response['time_list'].map(
+                    elem => new Date(elem)
+            ));
     }
 }
