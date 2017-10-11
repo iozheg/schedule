@@ -84,14 +84,11 @@ def get_schedules_brief_info(request):
                 'name': s.name, 
                 'description': s.description,
                 'address': s.address,
-            #    'tel_number': s.tel_number,
                 'work_time_start': s.work_time_start,
                 'work_time_end': s.work_time_end
             } for s in schedules 
         ] 
     }
-
- #   schedules_info_json = serializers.serialize('json', schedules_info)
 
     return JsonResponse(schedules_info)
 
@@ -116,8 +113,6 @@ def get_schedule_detail_info(request, schedule_id):
     return JsonResponse(schedule_info)
 
 def get_available_time_for_checkin(request, schedule_id):
-
-    #import datetime
 
     date = request.GET.get('date')
 

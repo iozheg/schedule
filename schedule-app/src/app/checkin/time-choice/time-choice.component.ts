@@ -53,30 +53,9 @@ export class TimeChoiceComponent implements OnInit {
                         this.scheduleService.getOccupiedTime(this.scheduleId, ExtendedDateClass.dateAdd(this.selectedDate, 'day', 1).toISOString())
                             .then(list => this.selectedSchedule.markOccupiedTime(list))
                     }
-                });
-            
-/*
-            if(this.selectedSchedule.work_time_start > this.selectedSchedule.work_time_end){
-
-                this.scheduleService.getOccupiedTime(this.scheduleId, this.date, true)
-                    .then(list => console.log(list)); 
-            }*/
-/*
-            this.scheduleService.getAvailableTimeForCheckin(this.scheduleId, this.date)
-                .then( time_list => this.timeArray = time_list);*/
-        //    this.date = this.searchParam.date;
-
-            
+                });            
         }
     }
-/*
-    createTimeArray(): void {
-        let timeRange = new TimeRangeClass(
-            this.selectedSchedule.workTime, 
-            this.selectedSchedule.dinnerTime
-        );
-        this.timeArray = timeRange.getTimeRangeStringArray(this.selectedSchedule.timeInterval);
-    }*/
 
     checkinButtonClick(){
         this.searchParam.time = this.selectedTime;

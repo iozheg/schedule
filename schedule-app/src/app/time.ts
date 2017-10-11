@@ -259,10 +259,7 @@ export class DateRangeClass{
     excludeDate(date: Date){
         
         this.dateRange.forEach(elem => {
-        //    console.log('from list: ' + elem.date);
-        //    console.log('from serv: ' + date);
             if(ExtendedDateClass.equal(elem.date, date)){
-            //    console.log('hit');
                 elem.status = 'occupied';
                 return;
             }
@@ -273,35 +270,3 @@ export class DateRangeClass{
         return (this.rangeStart.date < date && this.rangeEnd.date > date);
     }
 }
-/*
-	EndTimeInMinutes = function(){
-		return this.startTime.toMinutes() + this.duration;
-	}
-	
-	Contains = function(timeInterval)
-	{		
-		if(this.startTime.toMinutes() <= timeInterval.startTime.toMinutes() && this.startTime.toMinutes() < timeInterval.EndTimeInMinutes() &&
-			this.EndTimeInMinutes() > timeInterval.startTime.toMinutes() && this.EndTimeInMinutes() >= timeInterval.EndTimeInMinutes())
-			return true;
-		else
-			return false;
-	}
-	
-	ContainsTime = function(time)
-	{
-		var timeInMinutes = time.toMinutes();
-		var startTimeInMinutes = this.startTime.toMinutes();
-		var endTimeInMinutes = this.endTime.toMinutes();
-		var endTotalTimeInMinutes = startTimeInMinutes + this.duration;
-		
-		if(startTimeInMinutes <= timeInMinutes && timeInMinutes < endTotalTimeInMinutes || timeInMinutes == endTotalTimeInMinutes )
-			return true;
-		else if(timeInMinutes <= startTimeInMinutes && timeInMinutes <= endTimeInMinutes && startTimeInMinutes > endTimeInMinutes)
-			return true;
-		
-		return false;
-	}
-	
-	IsAroundTheClock = function(){
-		return this.startTime.getStringTime() == this.endTime.getStringTime();
-	}*/

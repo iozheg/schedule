@@ -125,45 +125,11 @@ export class Schedule{
 
         return hoursStr + ":" + minutesStr;
     }
-/*
-    private _setTime(timeString: string): Date{
-        " Return Date from string 'hh:mm:ss' "
-
-        let date = new Date();
-        try{
-            let timeArray = timeString.split(":");
-            
-            date.setSeconds(0);
-            date.setHours(+timeArray[0]);
-            date.setMinutes(+timeArray[1]);
-        }
-        catch(error){
-            // If string is not in format 'hh:mm:ss' than
-            // return null
-            date = null;
-        }
-
-        return date;
-    }*/
 
     createTimeArray(date: Date){
 
         console.time('Creation time array');
-/*
-        
-        if(this.containsTimeAfterMidnight){
-            this.work_time_end = ExtendedDateClass.dateSetOnlyDate(
-                this.work_time_end, 
-                ExtendedDateClass.dateAdd(date, 'day', 1)
-            );
-        }
-        else{
-            this.work_time_end = ExtendedDateClass.dateSetOnlyDate(
-                this.work_time_end, 
-                date
-            );
-        }*/
-        
+
         this.work_time_start = ExtendedDateClass.dateSetOnlyDate(this.work_time_start, date);
         this.work_time_end = ExtendedDateClass.dateSetOnlyDate(this.work_time_end, date);
      
@@ -184,7 +150,6 @@ export class Schedule{
     }
 
     markOccupiedTime(time_list: Date[]){
-        console.log(time_list);
         time_list.forEach( elem => {
             this.timeRange.excludeDate(elem);
         });
