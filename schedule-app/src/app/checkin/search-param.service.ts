@@ -22,11 +22,23 @@ export class SearchParamService{
     }
 
     set date(date: Date){
-        this._date = date;
+        this._date = new Date(
+            Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+        );
     }
 
     get date(): Date {
+        if(this._date === undefined){
+            let date = new Date();
+            this._date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+        }
         return this._date;
+    }
+
+    get dateYMD(): string {
+        return this._date.getFullYear()
+            + "-" + (this._date.getMonth()+1)
+            + "-" + this._date.getDate();
     }
 
     set time(time: string){
