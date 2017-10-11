@@ -5,11 +5,10 @@
         (click)="scheduleClick(schedule.id)">
         <md-card-header>
         <md-card-title>{{ schedule.id }}:{{ schedule.name }}</md-card-title>
-        <md-card-subtitle>Owner: {{ schedule.owner }}</md-card-subtitle>
+        <md-card-subtitle>Working time: {{ schedule.workTime }}</md-card-subtitle>
         </md-card-header>
         <md-card-content>
         <p>
-            Working time: {{ schedule.workTime }}<br>
             Description: {{ schedule.description }}
             <!-- {{ schedule.workDays }}<br>
             {{ schedule.dinnerTime }}<br>
