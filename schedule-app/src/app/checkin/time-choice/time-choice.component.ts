@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router} from '@angular/router';
 
 import { Schedule } from '../schedule';
-import { TimeRangeClass, DateTimeClass, ExtendedDateClass } from '../../time';
+import { DateTimeClass, UTCDate } from '../../time';
 import { SearchParamService } from '../search-param.service';
 import { ScheduleService } from '../../schedule.service';
 import { SCHEDULES, getScheduleById } from '../mock-schedules';
@@ -17,10 +17,9 @@ export class TimeChoiceComponent implements OnInit {
 
     scheduleId: number;
     selectedSchedule: Schedule;
-    selectedDate: Date;
+    selectedDate: UTCDate;
     timeArray: DateTimeClass[];
     selectedTime: string;
-    ready: boolean = false;
 
     constructor(
     //    private route: ActivatedRoute,
@@ -44,13 +43,17 @@ export class TimeChoiceComponent implements OnInit {
                     this.selectedSchedule = schedule;
                     this.selectedSchedule.createTimeArray(this.selectedDate);
                     this.timeArray = this.selectedSchedule.timeRange.dateRange;
+                    console.log(this.selectedDate);
+                    console.log(this.selectedDate.toISOString());
                 })
                 .then(() => this.scheduleService.getOccupiedTime(this.scheduleId, this.selectedDate.toISOString())
-                    .then(list => this.selectedSchedule.markOccupiedTime(list))   
+                    .then(list => { console.log('list: '  + list);this.selectedSchedule.markOccupiedTime(list);})   
                 )
                 .then(() => {
-                    if(this.selectedSchedule.containsTimeAfterMidnight){                        
-                        this.scheduleService.getOccupiedTime(this.scheduleId, ExtendedDateClass.dateAdd(this.selectedDate, 'day', 1).toISOString())
+                    if(this.selectedSchedule.containsTimeAfterMidnight){    
+                        let nextDay = new UTCDate(this.selectedDate);
+                        nextDay.add('day', 1);
+                        this.scheduleService.getOccupiedTime(this.scheduleId, nextDay.toISOString())
                             .then(list => this.selectedSchedule.markOccupiedTime(list))
                     }
                 });            

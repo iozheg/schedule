@@ -1,218 +1,153 @@
-export class TimeClass{
+export class UTCDate{
 
-    /*
-        Time class for handling time using only hours and minutes.
-    */
+    _date: Date;
 
-    private hours: number;
-    private minutes: number;
-    
-    constructor(timeString: string){
-        /*
-            Receives time in format 'hours:minutes' and parses to hours and minutes.
-        */
-        let timeArray = timeString.split(":");
-        this.hours = +timeArray[0];
-        this.minutes = +timeArray[1];
-    }
+    constructor(date: any = new Date()){
+        if(date instanceof Date)
+            this._date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        else if (date instanceof UTCDate)
+            this._date = new Date(
+                date.date.getFullYear(), 
+                date.date.getMonth(), 
+                date.date.getDate(),
+                date.date.getHours(),
+                date.date.getMinutes(),
+                date.date.getSeconds()
+            );
 
-	add(time: TimeClass){
-        // Add time to current object.
-
-        let hours: number;
-        let minutes: number;
-
-        // Sum minutes and get hours and minutes
-        hours = Math.floor( ( (this.toMinutes() + time.toMinutes()) / 60 ) % 24);
-        minutes = (this.toMinutes() + time.toMinutes()) % 60;
-
-        this.hours = hours;
-        this.minutes = minutes;
-    }
-    
-    greaterThan(time: TimeClass): boolean {
-        return this.toMinutes() > time.toMinutes();
-    }
-
-    lessThan(time: TimeClass): boolean {
-        return this.toMinutes() < time.toMinutes();
-    }
-
-	toMinutes(): number{
-		return this.hours * 60 + this.minutes;
-	}
-	
-	toString(): string {
-
-		let hours: string;
-        let minutes: string;
         
-        hours = this.hours < 10 ? "0" + this.hours : this.hours.toString();
-        minutes = this.minutes < 10 ? "0" + this.minutes : this.minutes.toString();
+        else if (typeof(date) == 'string'){
+            try{
+                let datetimeArray = date.split("T");
+                let dateArray = datetimeArray[0].split('-');
+                let timeArray = datetimeArray[1].split(':');
+                this._date = new Date(
+                    +dateArray[0], 
+                    +dateArray[1]-1, 
+                    +dateArray[2],
+                    +timeArray[0],
+                    +timeArray[1]
+                );
+            }
+            catch(error){
+                console.error("Wrong format of ISO date string", date);
+            }
+        }
+    }
 
-		return hours + ":" + minutes;
-	}
-}
+    get date(): Date {
+        return this._date;
+    }
 
-export class TimeRangeClass {
-    /*
-        Class for handling time ranges
-    */
+    get time(): number {
+        return this._date.getTime();
+    }
 
-    private startTime: TimeClass;
-    private endTime: TimeClass;
-    private duration: number;
-    private dinnerTimeStart: TimeClass;
-    private dinnerTimeEnd: TimeClass;
+    get hours(): number {
+        return this._date.getHours();
+    }
 
-    constructor(timeRangeString: string, dinnerRangeString: string){
-        /*
-            Receives two time strings and parses it to two TimeClass properties.
-            If the end of the time range is after midnight than afterMidnight is true.
-        */
-        
-        let timeArray = timeRangeString.split('-');
-        this.startTime = new TimeClass(timeArray[0]);
-        this.endTime = new TimeClass(timeArray[1]);
+    get minutes(): number {
+        return this._date.getMinutes();
+    }
 
+    setTime(time: string) {
         try{
-            let dinnerTimeArray = dinnerRangeString.split('-');
-            this.dinnerTimeStart = new TimeClass(dinnerTimeArray[0]);
-            this.dinnerTimeEnd = new TimeClass(dinnerTimeArray[1]);
-        }
-        catch(e){
-            this.dinnerTimeStart = this.dinnerTimeEnd = null;
-        }
-           
-        if(this.startTime.toMinutes() >= this.endTime.toMinutes()) {
-            this.duration = this.endTime.toMinutes() + (1440 - this.startTime.toMinutes());
-        }
-        else {
-            this.duration = this.endTime.toMinutes() - this.startTime.toMinutes();
-        }
-    }
-
-    getTimeRangeStringArray(timeInterval: string): string[]{
-        /*
-            Returns array of strings that contain time in format 'hh:mm'.
-            Array starts with start time of time range. Strings are generated
-            with interval 'timeInterval'.
-        */
-
-        let array: string[] = [];
-        let interval = new TimeClass(timeInterval);
-        let currentTime = new TimeClass(this.startTime.toString());
-        let currentDuration = 0;
-
-        while(true){
-            // If schedule has dinner we exclude dinner time from array
-            if(this.dinnerTimeStart == null || this.dinnerTimeStart == null
-                || currentTime.lessThan(this.dinnerTimeStart) 
-                || currentTime.greaterThan(this.dinnerTimeEnd))
-                {
-                    array.push(currentTime.toString());
-                }
-
+            let timeArray = ("" + time).split(":");
             
-            currentTime.add(interval);
-            
-            // Count current duration from the start of generation.
-            // Break if current duration greater than total duration of time range.
-            currentDuration += interval.toMinutes();
-            if(currentDuration > this.duration)
-                break;
-        }
-        return array;
-    }
-}
-
-export class ExtendedDateClass{
-    static dateSetTime(date: Date, time: string): Date {
-
-        let newDate = new Date(date);
-        
-        try{
-            let timeArray = time.split(":");
-            
-            newDate.setHours(+timeArray[0]);
-            newDate.setMinutes(+timeArray[1]);
-            newDate.setSeconds(+timeArray[2]);
+            this._date.setHours(+timeArray[0]);
+            this._date.setMinutes(+timeArray[1]);
+            this._date.setSeconds(+timeArray[2]);
         }
         catch(error){
-            // If string is not in format 'hh:mm:ss' than
-            // return null
-            newDate = null;
+            console.error("Wrong format of time string", time, error);
         }
+    }
+
+    setOnlyDate(date: UTCDate){
+        this._date.setDate(date._date.getDate());
+        this._date.setMonth(date._date.getMonth());
+        this._date.setFullYear(date._date.getFullYear());
+    }
     
-        return newDate;
+    getTimeInMinutes(): number {
+        return this.hours * 60 + this.minutes;
     }
 
-    static dateSetOnlyDate(oldDate: Date, newDate: Date): Date {
-
-        let date = new Date(oldDate);
-
-        date.setDate(newDate.getDate());
-        date.setMonth(newDate.getMonth());
-        date.setFullYear(newDate.getFullYear());
-
-        return date;
-    }
-
-    static dateAdd(date: Date, el: string, value: number): Date{
+    add(el: string, value: number){
         
-        let newDate = new Date(date);
-
         switch (el){
             case 'day':
-            newDate.setDate(date.getDate() + value);
+            this._date.setDate(this._date.getDate() + value);
                 break;
             case 'minute':
-            newDate.setMinutes(date.getMinutes() + value);
+            this._date.setMinutes(this.minutes + value);
                 break;
             case 'hour':
-            newDate.setHours(date.getHours() + value);
+            this._date.setHours(this.hours + value);
                 break;
         }
-        return newDate;
     }
 
-    static equal(date1: Date, date2: Date): boolean {
-        return (date1.getHours() == date2.getHours()
-            && date1.getMinutes() == date2.getMinutes()
-            && date1.getDate() == date2.getDate()
-            && date1.getMonth() == date2.getMonth()
-            && date1.getFullYear() == date2.getFullYear()
+    equal(date: UTCDate): boolean {
+        return (this.hours == date.hours
+            && this.minutes == date.minutes
+            && this._date.getDate() == date._date.getDate()
+            && this._date.getMonth() == date._date.getMonth()
+            && this._date.getFullYear() == date._date.getFullYear()
         )
+    }
+
+    gt(date: UTCDate): boolean {
+        return this._date > date.date;
+    }
+
+    lt(date: UTCDate): boolean {
+        return this._date < date.date;
+    }
+
+    gte(date: UTCDate): boolean {
+        return this._date >= date.date;
+    }
+
+    lte(date: UTCDate): boolean {
+        return this._date <= date.date;
+    }
+
+    toISOString(): string {
+        return this._date.getFullYear()
+            + '-' + (this._date.getMonth()+1)
+            + '-' + this._date.getDate()
+            + 'T' + this.hours
+            + ':' + this.minutes
+            + ':' + this._date.getSeconds();
+    }
+
+    getTimeString(): string {
+        
+        let hours = this.hours < 10 ? "0" + this.hours : this.hours.toString();
+        let minutes = this.minutes < 10 ? "0" + this.minutes : this.minutes.toString();
+
+        return hours + ":" + minutes;
     }
 }
 
 export class DateTimeClass{
-    date: Date;
+    date: UTCDate;
     status: string;
 
-    constructor(date: Date){
-        this.date = new Date(date);
+    constructor(date: UTCDate){
+        this.date = new UTCDate(date);
         this.status = 'active';
     }
 
     get time(): string {
-        
-        let hours: string;
-        let minutes: string;
-        
-        hours = this.date.getHours() < 10 ? "0" + this.date.getHours() : this.date.getHours().toString();
-        minutes = this.date.getMinutes() < 10 ? "0" + this.date.getMinutes() : this.date.getMinutes().toString();
-
-        return hours + ":" + minutes;
+    
+        return this.date.getTimeString();
     }
 
     get value(): string{
-        return this.date.getFullYear() + '-'
-            + this.date.getMonth() + '-'
-            + this.date.getDate() + 'T'
-            + this.date.getHours() + ':'
-            + this.date.getMinutes() + ':'
-            + this.date.getSeconds();
+        return this.date.toISOString();
     }
 }
 
@@ -221,18 +156,23 @@ export class DateRangeClass{
     rangeEnd: DateTimeClass;
     dateRange: DateTimeClass[];
 
-    constructor(start: Date, end: Date, interval: Date){
+    constructor(start: UTCDate, end: UTCDate, interval: UTCDate){
 
     //    this.rangeStart = new Date(start);
 
-        let intervalInMinutes = interval.getHours() * 60 + interval.getMinutes();
-        let current = new Date(start);
+        let intervalInMinutes = interval.date.getHours() * 60 + interval.date.getMinutes();
+        let current = new UTCDate(start);
        
+    //    console.log(start);
+    //    console.log(end);
+    //    console.log(current);
+        
         let timeArray: DateTimeClass[] = [];
         let i = 0;
-        while(current < end && i < 200){
+        while(current.lt(end) && i < 200){
             timeArray.push(new DateTimeClass(current));
-            current = ExtendedDateClass.dateAdd(current, 'minute', intervalInMinutes);
+            current.add('minute', intervalInMinutes);
+    //        console.log(current);
             i++;
         }
 
@@ -241,32 +181,33 @@ export class DateRangeClass{
         this.rangeStart = timeArray[0];
         this.rangeEnd = timeArray[timeArray.length-1];
     }
-
+    /*
     excludeRange(range: DateRangeClass){
         this.dateRange.forEach(elem =>{
             if(range.isDateIncluded(elem.date))
                 elem.status = 'occupied';
         });
     }
-
-    excludeRangev2(start: Date, end: Date){
+    */
+    excludeRange(start: UTCDate, end: UTCDate){
         this.dateRange.forEach(elem =>{
-            if(elem.date >= start && elem.date < end)
+            if(elem.date.gte(start) && elem.date.lt(end))
                 elem.status = 'occupied';
         });
     }
 
-    excludeDate(date: Date){
+    excludeDate(date: UTCDate){
         
         this.dateRange.forEach(elem => {
-            if(ExtendedDateClass.equal(elem.date, date)){
+            if(elem.date.equal(date)){
                 elem.status = 'occupied';
                 return;
             }
         });
     }
-
-    private isDateIncluded(date: Date){
-        return (this.rangeStart.date < date && this.rangeEnd.date > date);
-    }
+    /*
+    private isDateIncluded(date: UTCDate){
+        return this.rangeStart.date.lt(date)
+            && this.rangeEnd.date.gt(date);
+    }*/
 }

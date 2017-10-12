@@ -8,6 +8,7 @@ import { Schedule } from '../schedule';
 import { SearchParamService } from '../search-param.service';
 import { SCHEDULES } from '../mock-schedules';
 import { ScheduleService } from '../../schedule.service';
+import { UTCDate } from '../../time';
 
 @Component({
     //selector: 'schedule-choice',
@@ -18,7 +19,7 @@ import { ScheduleService } from '../../schedule.service';
 export class ScheduleChoiceComponent implements OnInit {
     
     carwashName: string;
-    date: Date;
+    selectedDate: UTCDate;
     schedules: Schedule[];
     
     constructor(
@@ -29,16 +30,14 @@ export class ScheduleChoiceComponent implements OnInit {
 
     ngOnInit() { 
         this.carwashName = this.searchParam.carwashName || '';
-        this.date = this.searchParam.date;
+        this.selectedDate = this.searchParam.date;
 
         this.scheduleService.getSchedulesBriefInfo(this.carwashName)
             .then( schedules => this.schedules = schedules );
-
-    //    console.log(this.searchParam);
     }
 
     scheduleClick(id): void{
-        this.searchParam.date = this.date;
+        this.searchParam.date = this.selectedDate;
         this.searchParam.selectedScheduleId = id;
     //    this.searchParam.carwashName = getScheduleById(id).name;
         

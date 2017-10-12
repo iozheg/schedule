@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { UTCDate } from '../time';
+
 @Injectable()
 export class SearchParamService{
     /*
@@ -9,7 +11,7 @@ export class SearchParamService{
     */
 
     private _carwashName: string;
-    private _date: Date;
+    private _date: UTCDate;
     private _time: string;
     private _selectedScheduleId: number;
 
@@ -21,26 +23,24 @@ export class SearchParamService{
         return this._carwashName;
     }
 
-    set date(date: Date){
-        this._date = new Date(
-            Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-        );
+    set date(date: UTCDate){
+        this._date = new UTCDate(date);
     }
 
-    get date(): Date {
+    get date(): UTCDate {
         if(this._date === undefined){
-            let date = new Date();
-            this._date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+         //   let date = new Date();
+            this._date = new UTCDate();
         }
         return this._date;
     }
-
+/*
     get dateYMD(): string {
         return this._date.getFullYear()
             + "-" + (this._date.getMonth()+1)
             + "-" + this._date.getDate();
     }
-
+*/
     set time(time: string){
         this._time = time;
     }

@@ -13,10 +13,11 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/map';
+//import 'rxjs/add/operator/map';
 
 import { SearchParamService } from '../search-param.service';
 import { ScheduleService } from '../../schedule.service';
+import { UTCDate } from '../../time';
 
 @Component({
 //    selector: 'carwash-search',
@@ -45,7 +46,7 @@ export class CarwashSearchComponent implements OnInit {
 
     ngOnInit() { 
         this.carwashName = this.searchParam.carwashName;
-        this.datepickerDate = this.searchParam.date || new Date();
+        this.datepickerDate = this.searchParam.date.date;
 
     //    this.options = ['first', 'second', 'sixth'];
 
@@ -71,7 +72,7 @@ export class CarwashSearchComponent implements OnInit {
     }
 
     searchButtonClick(){
-        this.searchParam.date = this.datepickerDate;
+        this.searchParam.date = new UTCDate(this.datepickerDate);
         this.searchParam.carwashName = this.carwashName;
 
         this.router.navigate(['/schedules']);

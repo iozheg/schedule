@@ -1,4 +1,4 @@
-import { TimeRangeClass, ExtendedDateClass, DateRangeClass } from '../time';
+import { DateRangeClass, UTCDate } from '../time';
 
 export class Schedule{
 
@@ -10,12 +10,12 @@ export class Schedule{
     address: string;
 
     work_days: number;
-    work_time_start: Date;
-    work_time_end: Date;
-    dinner_break_start: Date;
-    dinner_break_end: Date;
+    work_time_start: UTCDate;
+    work_time_end: UTCDate;
+    dinner_break_start: UTCDate;
+    dinner_break_end: UTCDate;
 
-    time_interval: Date;
+    time_interval: UTCDate;
     checkin_amount: number;
 
     active: Boolean;
@@ -34,14 +34,19 @@ export class Schedule{
         this.description = schedule.description || 'none';
         this.tel_number = schedule.tel_number || 'none';
         this.address = schedule.address || 'none';
-    
+        
         this.work_days = schedule.work_days || 'none';
-        this.work_time_start = ExtendedDateClass.dateSetTime(new Date(), schedule.work_time_start + "");
-        this.work_time_end = ExtendedDateClass.dateSetTime(new Date(), schedule.work_time_end + "");
-        this.dinner_break_start = ExtendedDateClass.dateSetTime(new Date(), schedule.dinner_break_start + "");
-        this.dinner_break_end = ExtendedDateClass.dateSetTime(new Date(), schedule.dinner_break_end + "");
+        this.work_time_start = new UTCDate();
+        this.work_time_start.setTime(schedule.work_time_start);
+        this.work_time_end = new UTCDate();
+        this.work_time_end.setTime(schedule.work_time_end);
+        this.dinner_break_start = new UTCDate();
+        this.dinner_break_start.setTime(schedule.dinner_break_start);
+        this.dinner_break_end = new UTCDate();
+        this.dinner_break_end.setTime(schedule.dinner_break_end);
     
-        this.time_interval = ExtendedDateClass.dateSetTime(new Date(), schedule.time_interval + "");
+        this.time_interval = new UTCDate();
+        this.time_interval.setTime(schedule.time_interval);
         this.checkin_amount = schedule.checkin_amount || 'none';
     
         this.active = schedule.active || 'none';
@@ -49,8 +54,8 @@ export class Schedule{
     
         this.owner = schedule.owner || 'none';
 
-        this.containsTimeAfterMidnight = this.work_time_start >= this.work_time_end;
-        console.log(this);
+        this.containsTimeAfterMidnight = this.work_time_start.gte(this.work_time_end);
+    //    console.log(this);
     }
 
     get workTime (): string {
@@ -59,11 +64,11 @@ export class Schedule{
             If work time is not set than return 'around the clock'.
         */ 
 
-        if(isNaN(this.work_time_start.getTime()) || isNaN(this.work_time_end.getTime()))
+        if(this.work_time_start.getTimeInMinutes() == this.work_time_end.getTimeInMinutes())
             return 'around the clock';
 
-        return this.preceding_0(this.work_time_start)
-                + " - " + this.preceding_0(this.work_time_end);
+        return this.work_time_start.getTimeString()
+                + " - " + this.work_time_end.getTimeString();
     }
 
     get dinnerTime (): string {
@@ -72,16 +77,16 @@ export class Schedule{
             If work time is not set than return 'no dinner'.
         */ 
 
-        if(isNaN(this.dinner_break_start.getTime()) || isNaN(this.dinner_break_end.getTime()))
+        if(this.dinner_break_start.getTimeInMinutes() == this.dinner_break_end.getTimeInMinutes())
             return 'no dinner';
                 
-        return this.preceding_0(this.dinner_break_start)
-                + " - " + this.preceding_0(this.dinner_break_end);
+        return this.dinner_break_start.getTimeString()
+                + " - " + this.dinner_break_end.getTimeString();
     }
 
     get timeInterval (): string {
         // Return time interval in format 'hh:mm'
-        return this.preceding_0(this.time_interval);
+        return this.time_interval.getTimeString();
     }
 
     get createDate (): string {
@@ -117,24 +122,16 @@ export class Schedule{
 
         return workDaysString;
     }
-    
-    private preceding_0(value: Date): string {
-        // Add the preceding '0' to output string if hours or minutes <10
-        let hoursStr = value.getHours() < 10 ? '0' + value.getHours() : value.getHours().toString();
-        let minutesStr = value.getMinutes() < 10 ? '0' + value.getMinutes() : value.getMinutes().toString();
 
-        return hoursStr + ":" + minutesStr;
-    }
-
-    createTimeArray(date: Date){
+    createTimeArray(date: UTCDate){
 
         console.time('Creation time array');
 
-        this.work_time_start = ExtendedDateClass.dateSetOnlyDate(this.work_time_start, date);
-        this.work_time_end = ExtendedDateClass.dateSetOnlyDate(this.work_time_end, date);
+        this.work_time_start.setOnlyDate(date);
+        this.work_time_end.setOnlyDate(date);
      
         if(this.containsTimeAfterMidnight)
-            this.work_time_end = ExtendedDateClass.dateAdd(this.work_time_end, 'day', 1);
+            this.work_time_end.add('day', 1);
         
         this.timeRange = new DateRangeClass(
             this.work_time_start, 
@@ -142,14 +139,14 @@ export class Schedule{
             this.time_interval
         )
 
-        this.dinner_break_start = ExtendedDateClass.dateSetOnlyDate(this.dinner_break_start, date);
-        this.dinner_break_end = ExtendedDateClass.dateSetOnlyDate(this.dinner_break_end, date);
-        this.timeRange.excludeRangev2(this.dinner_break_start, this.dinner_break_end);
+        this.dinner_break_start.setOnlyDate(date);
+        this.dinner_break_end.setOnlyDate(date);
+        this.timeRange.excludeRange(this.dinner_break_start, this.dinner_break_end);
 
         console.timeEnd('Creation time array');
     }
 
-    markOccupiedTime(time_list: Date[]){
+    markOccupiedTime(time_list: UTCDate[]){
         time_list.forEach( elem => {
             this.timeRange.excludeDate(elem);
         });

@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
 import { Schedule } from './checkin/schedule';
+import { UTCDate } from './time';
 
 @Injectable()
 export class ScheduleService {
@@ -52,13 +53,13 @@ export class ScheduleService {
             .then( response => response['time']);
     }
 
-    getOccupiedTime(schedule_id: number, date: string): Promise<Date[]>{
+    getOccupiedTime(schedule_id: number, date: string): Promise<UTCDate[]>{
         return this.httpClient
             .get('api/schedule/' + schedule_id + '/occupied?date=' + date)
             .toPromise()
             .then(response => 
                 response['time_list'].map(
-                    elem => new Date(elem)
+                    elem => new UTCDate(elem)
             ));
     }
 }
