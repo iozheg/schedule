@@ -11,7 +11,11 @@
         </md-card-content>
     </md-card>
 </div>
-<md-button-toggle-group class="toggle-group mat-typography" [(ngModel)]='selectedTime' #group="mdButtonToggleGroup">
+<md-button-toggle-group 
+    class="toggle-group mat-typography" 
+    [(ngModel)]='selectedTime' 
+    (ngModelChange)='bookTime()'
+    #group="mdButtonToggleGroup">
     <md-button-toggle 
         *ngFor="let time of timeArray; let i=index" 
         [class.inactive]="time.status=='occupied'"
@@ -23,14 +27,15 @@
  
     <div style="width: 100%;"></div>
     <a md-button
-    color="primary" 
-    class="back-button"
-    [routerLink]="['/schedules/']">
-    Back</a>
+        color="primary" 
+        class="back-button"
+        [routerLink]="['/schedules/']">
+        Back</a>
     <a md-raised-button
-    color="accent" 
-    class="back-button"
-    (click)="checkinButtonClick()">
-    Checkin</a>
+        [disabled]='!checkinButtonActive'
+        color="accent" 
+        class="back-button"
+        (click)="checkinButtonClick()">
+        Checkin</a>
 </md-button-toggle-group>
 
