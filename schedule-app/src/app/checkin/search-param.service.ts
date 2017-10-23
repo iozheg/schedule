@@ -12,8 +12,9 @@ export class SearchParamService{
 
     private _carwashName: string;
     private _date: UTCDate;
-    private _time: string;
+    private _time: UTCDate;
     private _selectedScheduleId: number;
+    private _checkinId: number;
 
     set carwashName(name: string){
         this._carwashName = name;
@@ -41,11 +42,11 @@ export class SearchParamService{
             + "-" + this._date.getDate();
     }
 */
-    set time(time: string){
-        this._time = time;
+    set time(time: UTCDate){
+        this._time = new UTCDate(time);
     }
 
-    get time(): string {
+    get time(): UTCDate {
         return this._time;
     }
 
@@ -55,5 +56,13 @@ export class SearchParamService{
 
     get selectedScheduleId(): number{
         return this._selectedScheduleId;
+    }
+
+    set checkinId(id: number) {
+        this._checkinId = id;
+    }
+
+    get checkinId(): number {
+        return this._checkinId;
     }
 }
