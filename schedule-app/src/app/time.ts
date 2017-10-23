@@ -55,9 +55,9 @@ export class UTCDate{
         try{
             let timeArray = ("" + time).split(":");
             
-            this._date.setHours(+timeArray[0]);
-            this._date.setMinutes(+timeArray[1]);
-            this._date.setSeconds(+timeArray[2]);
+            this._date.setHours(+timeArray[0] || 0);
+            this._date.setMinutes(+timeArray[1] || 0);
+            this._date.setSeconds(+timeArray[2] || 0);
         }
         catch(error){
             console.error("Wrong format of time string", time, error);
@@ -129,6 +129,13 @@ export class UTCDate{
         let minutes = this.minutes < 10 ? "0" + this.minutes : this.minutes.toString();
 
         return hours + ":" + minutes;
+    }
+
+    getDateString(): string {
+
+        return this._date.getDate()
+        + '-' + (this._date.getMonth()+1)
+        + '-' + this._date.getFullYear()
     }
 }
 
