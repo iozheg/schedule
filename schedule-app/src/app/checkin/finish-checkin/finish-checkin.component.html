@@ -1,14 +1,64 @@
-<div class="horizontal-center">
-    <span class='mat-display-1'>Done!</span>
-    <br>
-    <span>Your checkin:</span>
-    <br>
-    {{ carwashName }}
-    <br>
-    {{ date }}
-    <br>
-    {{ time }}
-    <br>
-    <span>Sign up and you will not have to enter data again</span>
+<div class="horizontal-center" *ngIf='selectedScheduleId'>
+    <div id='done-message' *ngIf='isDone'>
+        <span class='mat-display-1'>Done!</span>
+        <br>
+        <span>Your checkin:</span>
+        <br>
+        {{ carwashName }}
+        <br>
+        {{ selectedDate.getDateString() }}
+        <br>
+        {{ selectedDate.getTimeString() }}
+        <br>
+        <!-- <span>Sign up and you will not have to enter data again</span> -->
+    </div>
+    <div id='client-info-window' *ngIf='!isDone'>
+        <!-- <md-form-field>
+            <input mdInput 
+                [(ngModel)]='clientName'                
+                placeholder="Name">
+        </md-form-field>
+        <br> -->
+        <span class="mat-h2">Enter information for finishing checkin:</span>
+        <br>
+        Date: {{ selectedDate.getDateString() }}
+        <br>
+        Time: {{ selectedDate.getTimeString() }}
+        <br>
+        <md-form-field class="input-field">
+            <input mdInput  
+                [(ngModel)]='clientTelNumber'               
+                placeholder="Telephone" required>
+        </md-form-field>
+        <br>
+        <md-form-field class="input-field">
+            <input mdInput 
+                [(ngModel)]='clientCarRegplate'                
+                placeholder="Car regplate">
+        </md-form-field>
+        <br>
+        <md-form-field class="input-field">
+            <input mdInput   
+                [(ngModel)]='clientCarModel'              
+                placeholder="Car model">
+        </md-form-field>
 
+        <div style="width: 100%;"></div>
+        <a md-button
+            color="primary" 
+            class="back-button"
+            [routerLink]="['/schedules/time/']">
+            Back</a>
+        <a md-raised-button
+            [disabled]='!clientTelNumber.length'
+            color="accent" 
+            class="back-button"
+            (click)="doneButtonClick()">
+            Done</a>
+    </div>
+    <!-- <div>{{ clientTelNumber }}</div>
+    <div>{{ clientCarRegplate }}</div>
+    <div>{{ clientCarModel }}</div> -->
+
+    
 </div>
