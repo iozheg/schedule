@@ -11,7 +11,12 @@ class ClientProfile(models.Model):
     
     """
     
-    user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        User, 
+        related_name='profile', 
+        null=True, 
+        on_delete=models.CASCADE
+    )
     name = models.CharField(max_length=50, blank=True)
     tel_number = models.CharField(max_length=15)
     car_model = models.CharField(max_length=40, blank=True)
