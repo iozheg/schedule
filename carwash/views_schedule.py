@@ -129,3 +129,4 @@ def get_occupied_time(request, schedule_id):
     time_list = schedule.get_occupied_time(date)
 
     return JsonResponse({'time_list': time_list})
+
