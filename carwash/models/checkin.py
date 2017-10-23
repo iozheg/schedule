@@ -16,7 +16,7 @@ class CheckinManager(models.Manager):
         
         return checkin_amount
         
-    def add_checkin(self, schedule, date, time, client):    #change schedule to schedule_id? This model shouldn't know about another?
+    def add_checkin(self, schedule, date, time, client, is_booking):    #change schedule to schedule_id? This model shouldn't know about another?
         ''' Try add new checkin with date and time in schedule.
         
         Each schedule can have limited amount of checkins in same time
@@ -27,6 +27,11 @@ class CheckinManager(models.Manager):
         amount = self.get_checkin_amount_by_datetime(
                             schedule.id, date, time
                         )
+
+        if is_booking:
+            status = 2
+        else:
+            status = 1
         
         #try:
             #schedule = Schedule.objects.get(id=schedule_id).checkin_amount
@@ -35,7 +40,7 @@ class CheckinManager(models.Manager):
         
         if amount < schedule.checkin_amount:
             checkin = Checkin.objects.create(
-                date=date, time=time, client=client, schedule=schedule
+                date=date, time=time, client=client, schedule=schedule, active=status
             )
             return checkin
         else:
@@ -48,7 +53,7 @@ class Checkin(models.Model):
     
     date = models.DateField()
     time = models.TimeField()
-    active = models.BooleanField(default=True)
+    active = models.SmallIntegerField(default=1)
     create_date = models.DateField(auto_now_add=True)
 
     client = models.ForeignKey(ClientProfile, null=True, on_delete=models.SET_NULL)

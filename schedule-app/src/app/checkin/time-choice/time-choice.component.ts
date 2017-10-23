@@ -19,7 +19,10 @@ export class TimeChoiceComponent implements OnInit {
     selectedSchedule: Schedule;
     selectedDate: UTCDate;
     timeArray: DateTimeClass[];
-    selectedTime: string;
+    selectedTime: UTCDate;
+    checkinId: number;
+
+    checkinButtonActive = false;
 
     constructor(
     //    private route: ActivatedRoute,
@@ -35,6 +38,12 @@ export class TimeChoiceComponent implements OnInit {
             this.router.navigate(['/schedules']);
         
         else{
+
+            // If return from finish-checkin component than we should
+            // cancel booking that was made earlier
+            if(this.searchParam.checkinId > 0)
+                this.unbookTime(this.searchParam.checkinId);
+
             this.scheduleId = this.searchParam.selectedScheduleId;
             this.selectedDate = this.searchParam.date
 
@@ -43,11 +52,11 @@ export class TimeChoiceComponent implements OnInit {
                     this.selectedSchedule = schedule;
                     this.selectedSchedule.createTimeArray(this.selectedDate);
                     this.timeArray = this.selectedSchedule.timeRange.dateRange;
-                    console.log(this.selectedDate);
-                    console.log(this.selectedDate.toISOString());
+                //    console.log(this.selectedDate);
+                //    console.log(this.selectedDate.toISOString());
                 })
                 .then(() => this.scheduleService.getOccupiedTime(this.scheduleId, this.selectedDate.toISOString())
-                    .then(list => { console.log('list: '  + list);this.selectedSchedule.markOccupiedTime(list);})   
+                    .then(list => this.selectedSchedule.markOccupiedTime(list))   
                 )
                 .then(() => {
                     if(this.selectedSchedule.containsTimeAfterMidnight){    
@@ -60,8 +69,42 @@ export class TimeChoiceComponent implements OnInit {
         }
     }
 
+    bookTime(){
+
+        if(this.checkinId > 0){
+            this.unbookTime(this.checkinId);
+            this.checkinId = 0;
+        }
+
+        this.searchParam.date.setTime(new UTCDate(this.selectedTime).getTimeString());
+        this.scheduleService.bookTime(
+            this.searchParam.selectedScheduleId, 
+            this.searchParam.date.toISOString()
+        )
+        .then( checkinId => {
+                checkinId ? this.checkinButtonActive = true : false;
+                this.checkinId = +checkinId;
+            }
+        );
+    }
+
+    unbookTime(id: number){
+        this.scheduleService.cancelBookingTime(id);
+    }
+
     checkinButtonClick(){
-        this.searchParam.time = this.selectedTime;
+    //    this.searchParam.time = this.selectedTime;
+    //    console.log(this.selectedTime);
+    //    console.log(this.searchParam.time);
+    //    this.searchParam.date.setTime(new UTCDate(this.selectedTime).getTimeString());
+    //    console.log(this.searchParam.time);
+    /*    this.searchParam.carwashName = this.selectedSchedule.name;
+        this.scheduleService.confirmCheckin(this.checkinId).
+        then(result => {
+            if (result === 'success')
+                this.router.navigate(['/schedules/checkin']);
+        });*/
+        this.searchParam.checkinId = this.checkinId;
         this.router.navigate(['/schedules/checkin']);
     }
 }

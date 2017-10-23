@@ -42,6 +42,9 @@ urlpatterns = [
     url(r'^api/schedule/(?P<schedule_id>\d+)/occupied$', views_schedule.get_occupied_time),
     url(r'^api/schedules/$', views_schedule.get_schedules_brief_info),
     url(r'^api/schedule/(?P<schedule_id>\d+)/available$', views_schedule.get_available_time_for_checkin),
+    url(r'^api/schedule/(?P<schedule_id>\d+)/book$', views_checkin.book_time),
+    url(r'^api/checkin/(?P<checkin_id>\d+)/cancelbooking$', views_checkin.cancel_booking),
+    url(r'^api/checkin/confirm$', views_checkin.confirm_checkin),
 
     url(r'^$', views.test)
 ]
