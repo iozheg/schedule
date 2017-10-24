@@ -78,8 +78,10 @@ def book_time(request, schedule_id):
     
     from datetime import datetime
 
+    post_data = json.loads(request.body.decode('utf-8'))
+
     date = datetime.strptime(
-        request.GET.get('date'), 
+        post_data['date'], 
         '%Y-%m-%dT%H:%M:%S'
     )
 

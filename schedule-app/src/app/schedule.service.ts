@@ -65,7 +65,7 @@ export class ScheduleService {
 
     bookTime(scheduleId: number, date: string): Promise<string>{
         return this.httpClient
-            .get('api/schedule/' + scheduleId + '/book?date=' + date)
+            .post('api/schedule/' + scheduleId + '/book', {date: date})
             .toPromise()
             .then(response => { 
                     console.log(response);
@@ -75,7 +75,7 @@ export class ScheduleService {
 
     cancelBookingTime(checkinId: number): Promise<string>{
         return this.httpClient
-            .get('api/checkin/' + checkinId + '/cancelbooking')
+            .post('api/checkin/' + checkinId + '/cancelbooking', {})
             .toPromise()
             .then(response => {
                 console.log(response);
