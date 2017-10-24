@@ -6,7 +6,15 @@ from .user import BusinessProfile
 
 class ScheduleManager(models.Manager):
     
-    pass
+    def get_filtered_names(self, name_template):
+        '''
+            Returns list with names which starts with name_template
+        '''
+        
+        schedules = Schedule.objects.filter(name__startswith=name_template)
+        schedules_names = [s.name for s in schedules]
+
+        return schedules_names
 
 class Schedule(models.Model):
     """Schedule model
@@ -63,6 +71,7 @@ class Schedule(models.Model):
         BusinessProfile, null=True, on_delete=models.SET_NULL
     )
     
+    objects = ScheduleManager()
     
     def get_available_time_for_checkin(self, date):
         """

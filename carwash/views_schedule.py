@@ -63,10 +63,10 @@ def get_schedules_names(request):
 
     name = request.GET.get('name')
 
-    schedules = Schedule.objects.filter(name__startswith=name)
-    schedules_names = { 'schedules': [s.name for s in schedules]}
+    schedules_names = Schedule.objects.get_filtered_names(name)
+    response = { 'schedules': schedules_names }
     
-    return JsonResponse(schedules_names)
+    return JsonResponse(response)
 
 def get_schedules_brief_info(request):
     """ 
