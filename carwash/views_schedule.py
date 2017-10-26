@@ -56,41 +56,38 @@ def checkins_by_date(request, schedule_id):
  #   for ch in checkins:
  #       out += str(ch.time)
         
-    return render(request, 'test_checkins_by_date.html', {'date': request.POST.get('checkin_date', 'oh!'), 'time': checkins})
+    return render(
+        request, 
+        'test_checkins_by_date.html', 
+        {
+            'date': request.POST.get('checkin_date', 'oh!'), 
+            'time': checkins
+        }
+    )
 
 def get_schedules_names(request):
-    """ Returns all schedules. For testing http requests from Angular app """
-
-    name = request.GET.get('name')
-
-    schedules_names = Schedule.objects.get_filtered_names(name)
-    response = { 'schedules': schedules_names }
-    
-    return JsonResponse(response)
-
-def get_schedules_brief_info(request):
     """ 
-        Returns schedule info: id, name, description, address, tel_number,
-        work time 
+        Returns all schedules. 
+        For testing http requests from Angular app 
     """
 
     name = request.GET.get('name')
 
-    schedules = Schedule.objects.filter(name__startswith=name)
-    schedules_info = { 
-        'schedules': [ 
-            {
-                'id': s.id, 
-                'name': s.name, 
-                'description': s.description,
-                'address': s.address,
-                'work_time_start': s.work_time_start,
-                'work_time_end': s.work_time_end
-            } for s in schedules 
-        ] 
-    }
+    schedules_names = Schedule.objects.get_filtered_names(name)
+    
+    return JsonResponse( {'schedules': schedules_names} )
 
-    return JsonResponse(schedules_info)
+def get_schedules_brief_info(request):
+    """ 
+        Returns schedule info: id, name, description, address, 
+        tel_number, work time 
+    """
+
+    name = request.GET.get('name')
+
+    schedules_info = Schedule.objects.get_brief_info(name)
+
+    return JsonResponse( {'schedules': schedules_info} )
 
 def get_schedule_detail_info(request, schedule_id):
     

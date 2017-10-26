@@ -8,13 +8,33 @@ class ScheduleManager(models.Manager):
     
     def get_filtered_names(self, name_template):
         '''
-            Returns list with names which starts with name_template
+            Returns list with names which starts with name_template.
         '''
         
         schedules = Schedule.objects.filter(name__startswith=name_template)
         schedules_names = [s.name for s in schedules]
 
         return schedules_names
+
+    def get_brief_info(self, name_template):
+        '''
+            Return list with brief info of schedules
+            which names starts with name_template.
+        '''
+
+        schedules = Schedule.objects.filter(name__startswith=name_template)
+        schedules_info = [ 
+            {
+                'id': s.id, 
+                'name': s.name, 
+                'description': s.description,
+                'address': s.address,
+                'work_time_start': s.work_time_start,
+                'work_time_end': s.work_time_end
+            } for s in schedules 
+        ]
+
+        return schedules_info
 
 class Schedule(models.Model):
     """Schedule model
