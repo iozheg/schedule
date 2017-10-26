@@ -152,9 +152,6 @@ class Schedule(models.Model):
     def get_occupied_time(self, date):
         """Returns list of occupied time.
 
-        Args:
-            date (string): string in format 'YYYY-MM-DDTH:M:S'
-
         Get date from input date string and get QuerySet of all
         checkins on this date. Count how many checkins in same
         date and time. If amount of checkins in same date and time
@@ -163,7 +160,7 @@ class Schedule(models.Model):
         """        
         from collections import Counter
         
-        date = datetime.datetime.strptime(date.split("T")[0], '%Y-%m-%d')
+        
         time_list = []
                            
         checkins_by_date = self.checkin_set.filter(date=date)

@@ -97,7 +97,10 @@ def get_available_time_for_checkin(request, schedule_id):
 
 def get_occupied_time(request, schedule_id):
 
+    from datetime import datetime
+
     date = request.GET.get('date')
+    date = datetime.strptime(date.split("T")[0], '%Y-%m-%d')
     schedule = Schedule.objects.get(id=schedule_id)
     time_list = schedule.get_occupied_time(date)
 
