@@ -92,22 +92,9 @@ def get_schedules_brief_info(request):
 def get_schedule_detail_info(request, schedule_id):
     
     schedule = Schedule.objects.get(id=schedule_id)
-    schedule_info = {
-        'schedule':{
-            'id': schedule.id,
-            'name': schedule.name, 
-            'description': schedule.description,
-            'address': schedule.address,
-            'tel_number': schedule.tel_number,
-            'work_time_start': schedule.work_time_start,
-            'work_time_end': schedule.work_time_end,
-            'dinner_break_start': schedule.dinner_break_start,
-            'dinner_break_end': schedule.dinner_break_end,
-            'time_interval': schedule.time_interval
-        }
-    }
+    schedule_info = schedule.get_info()
 
-    return JsonResponse(schedule_info)
+    return JsonResponse( {'schedule': schedule_info} )
 
 def get_available_time_for_checkin(request, schedule_id):
 

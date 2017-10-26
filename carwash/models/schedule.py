@@ -7,21 +7,21 @@ from .user import BusinessProfile
 class ScheduleManager(models.Manager):
     
     def get_filtered_names(self, name_template):
-        '''
-            Returns list with names which starts with name_template.
-        '''
+        """Returns list with schedule names.
         
+        Returned only names which start with name_template.
+        """        
         schedules = Schedule.objects.filter(name__startswith=name_template)
         schedules_names = [s.name for s in schedules]
 
         return schedules_names
 
     def get_brief_info(self, name_template):
-        '''
-            Return list with brief info of schedules
-            which names starts with name_template.
-        '''
+        """Returns list with brief info of schedules.
 
+        Only schedules which names start with name_template are 
+        selected.
+        """
         schedules = Schedule.objects.filter(name__startswith=name_template)
         schedules_info = [ 
             {
@@ -37,7 +37,7 @@ class ScheduleManager(models.Manager):
         return schedules_info
 
 class Schedule(models.Model):
-    """Schedule model
+    """Schedule model.
     
     name - short name for schedule.
     
@@ -93,11 +93,23 @@ class Schedule(models.Model):
     
     objects = ScheduleManager()
     
+    def get_info(self):
+        """Returns schedule info."""
+        return  {
+                'id': self.id,
+                'name': self.name, 
+                'description': self.description,
+                'address': self.address,
+                'tel_number': self.tel_number,
+                'work_time_start': self.work_time_start,
+                'work_time_end': self.work_time_end,
+                'dinner_break_start': self.dinner_break_start,
+                'dinner_break_end': self.dinner_break_end,
+                'time_interval': self.time_interval
+        }
+
     def get_available_time_for_checkin(self, date):
-        """
-            This method finds time available for checkins 
-        """
-        
+        """This method finds time available for checkins."""        
         date = datetime.datetime.strptime(date, '%Y-%m-%d')
         
         # Weekday number matchs bitmask
