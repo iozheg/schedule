@@ -10,6 +10,7 @@ class ScheduleManager(models.Manager):
         """Returns list with schedule names.
         
         Returned only names which start with name_template.
+
         """        
         schedules = Schedule.objects.filter(name__startswith=name_template)
         schedules_names = [s.name for s in schedules]
@@ -21,6 +22,9 @@ class ScheduleManager(models.Manager):
 
         Only schedules which names start with name_template are 
         selected.
+        Returned info: 
+            id, name, description, address, tel_number, work time
+
         """
         schedules = Schedule.objects.filter(name__startswith=name_template)
         schedules_info = [ 
@@ -146,17 +150,23 @@ class Schedule(models.Model):
         return time_list
 
     def get_occupied_time(self, date):
-        
+        """Returns list of occupied time.
+
+        Args:
+            date (string): string in format 'YYYY-MM-DDTH:M:S'
+
+        Get date from input date string and get QuerySet of all
+        checkins on this date. Count how many checkins in same
+        date and time. If amount of checkins in same date and time
+        equal or more than possible (self.checkin_amount) than we
+        can't add one more and add this datetime to returned list.
+        """        
         from collections import Counter
         
         date = datetime.datetime.strptime(date.split("T")[0], '%Y-%m-%d')
-    #    date = datetime.datetime(date)
         time_list = []
-    #    time_list = self.get_time_list()
                            
-        # Get all checkins at this date for this schedule.
         checkins_by_date = self.checkin_set.filter(date=date)
-        # Get set of time property of checkins (nonrepeating).
         checkin_times = [
             datetime.datetime.combine(ch.date, ch.time) for ch in checkins_by_date
         ]

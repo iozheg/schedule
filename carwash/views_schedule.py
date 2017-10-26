@@ -66,40 +66,30 @@ def checkins_by_date(request, schedule_id):
     )
 
 def get_schedules_names(request):
-    """ 
-        Returns all schedules. 
-        For testing http requests from Angular app 
-    """
-
+    """For testing http requests from Angular app."""
     name = request.GET.get('name')
-
     schedules_names = Schedule.objects.get_filtered_names(name)
     
     return JsonResponse( {'schedules': schedules_names} )
 
 def get_schedules_brief_info(request):
-    """ 
-        Returns schedule info: id, name, description, address, 
-        tel_number, work time 
-    """
-
+    """Returns schedule info."""
     name = request.GET.get('name')
-
     schedules_info = Schedule.objects.get_brief_info(name)
 
     return JsonResponse( {'schedules': schedules_info} )
 
 def get_schedule_detail_info(request, schedule_id):
-    
+    """Returns schedule detailed info."""
     schedule = Schedule.objects.get(id=schedule_id)
     schedule_info = schedule.get_info()
 
     return JsonResponse( {'schedule': schedule_info} )
 
+#NOT USED
 def get_available_time_for_checkin(request, schedule_id):
 
     date = request.GET.get('date')
-
     schedule = Schedule.objects.get(id=schedule_id)
     time_list = schedule.get_available_time_for_checkin(date=date)
 
@@ -108,7 +98,6 @@ def get_available_time_for_checkin(request, schedule_id):
 def get_occupied_time(request, schedule_id):
 
     date = request.GET.get('date')
-
     schedule = Schedule.objects.get(id=schedule_id)
     time_list = schedule.get_occupied_time(date)
 
