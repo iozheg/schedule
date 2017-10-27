@@ -16,31 +16,22 @@ class CheckinManager(models.Manager):
         
         return checkin_amount
         
-    def add_checkin(self, schedule, date, time, client, is_booking):    #change schedule to schedule_id? This model shouldn't know about another?
+    def add_checkin(self, schedule, date, time, client):
         ''' Try add new checkin with date and time in schedule.
         
         Each schedule can have limited amount of checkins in same time
         and date. We check if we can add one more. If so than create new
-        else return False
+        else return False.
+        checkin.active=2 means that it is preliminary checkin created
+        while booking.
         '''
-        
         amount = self.get_checkin_amount_by_datetime(
                             schedule.id, date, time
                         )
-
-        if is_booking:
-            status = 2
-        else:
-            status = 1
-        
-        #try:
-            #schedule = Schedule.objects.get(id=schedule_id).checkin_amount
-        #except Schedule.DoesNotExist:
-            #return False
         
         if amount < schedule.checkin_amount:
             checkin = Checkin.objects.create(
-                date=date, time=time, client=client, schedule=schedule, active=status
+                date=date, time=time, client=client, schedule=schedule, active=2
             )
             return checkin
         else:
@@ -70,6 +61,15 @@ class Checkin(models.Model):
         self.save()
         
         return True
+
+    def confirm(self, client_profile):
+        """Confirm checkin.
+        
+        active=1 means that it is confirmed.
+        """
+        self.client = client_profile
+        self.active = 1
+        self.save()
 
 class CheckinCreateForm(forms.Form):
     

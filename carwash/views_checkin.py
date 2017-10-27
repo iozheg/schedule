@@ -75,24 +75,27 @@ def checkin_amount(request):
 
 @ensure_csrf_cookie
 def book_time(request, schedule_id):
+    """Book time.
     
+    Booking - first step in creating checkin.
+    Create preliminary checkin with client=None.
+
+    Returns checkin id or error message.
+    """    
     from datetime import datetime
 
     post_data = json.loads(request.body.decode('utf-8'))
-
     date = datetime.strptime(
         post_data['date'], 
         '%Y-%m-%dT%H:%M:%S'
     )
 
     schedule = Schedule.objects.get(id=schedule_id)
-
     checkin = Checkin.objects.add_checkin(
                     schedule=schedule, 
                     date=date.date(), 
                     time=date.time(), 
-                    client=None, 
-                    is_booking=True
+                    client=None
                 )
     if checkin:
         checkin = checkin.id
@@ -100,7 +103,11 @@ def book_time(request, schedule_id):
     return JsonResponse({'result': checkin})
 
 def cancel_booking(request, checkin_id):
+    """Cancel previously booked time.
     
+    While selecting time for checkin client may choose diffrent
+    time, so we must cancel booking of previously selected time.
+    """    
     # add user check
 
     checkin = Checkin.objects.get(id=checkin_id)
@@ -111,7 +118,16 @@ def cancel_booking(request, checkin_id):
     return JsonResponse({'result': 'success'})
 
 def confirm_checkin(request):
+    """Confirm previously created checkin.
+    
+    Confirm - second step in creating checkin.
+    Now we recieve users info, create user profile, add it to checkin.
 
+    If checkin.active!=2 than no such checkin or it was already 
+    confirmed.
+
+    Returns 'success' or error message.
+    """
     # add user check
 
     post_data = json.loads(request.body.decode('utf-8'))
@@ -119,27 +135,20 @@ def confirm_checkin(request):
     try:
         checkin = Checkin.objects.get(id=post_data['checkin_id'])
     except Checkin.DoesNotExist:
-        return JsonResponse({ 'result': 'fault' })
+        return JsonResponse({ 'result': 'no such checkin' })
 
-
-    if checkin.active == 2:
-        
-    #    try:
-        client = ClientProfile.objects.create(
-            user = None,
-            tel_number = post_data['tel_number'],
-            car_model = post_data['car_model'],
-            car_reg_number = post_data['car_regplate']
-        )
-
-        client.save()
-        
-    #    except:
-    #        return JsonResponse({'result': 'can\'t create user'})
-
-        checkin.active = 1
-        checkin.client = client
-        checkin.save()
+    if checkin.active == 2:        
+        try:
+            client = ClientProfile.objects.create(
+                user = None,
+                tel_number = post_data['tel_number'],
+                car_model = post_data['car_model'],
+                car_reg_number = post_data['car_regplate']
+            )
+            client.save()        
+        except:
+            return JsonResponse({'result': 'can\'t create user'})
+        checkin.confirm(client)
         response = 'success'
     else:
         response = 'fault'
