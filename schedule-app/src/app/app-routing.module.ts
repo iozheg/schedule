@@ -5,8 +5,10 @@ import { CarwashSearchComponent } from './checkin/carwash-search/carwash-search.
 import { ScheduleChoiceComponent } from './checkin/schedule-choice/schedule-choice.component';
 import { TimeChoiceComponent } from './checkin/time-choice/time-choice.component';
 import { FinishCheckinComponent } from './checkin/finish-checkin/finish-checkin.component';
+import { ClientLoginComponent } from './user/client-login.component';
 
 const routes: Routes = [
+  { path: 'login', component: ClientLoginComponent},
   { path: 'schedules/time', component: TimeChoiceComponent},
   { path: 'schedules/checkin', component: FinishCheckinComponent},
   { path: 'schedules', component: ScheduleChoiceComponent},

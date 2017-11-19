@@ -16,12 +16,12 @@ export class ScheduleService {
     constructor(
         private httpClient: HttpClient
     ) { }
-    
+/*    
     getSchedules(): void{
         this.httpClient.get('/api/schedules')
             .subscribe(data => {console.log(data);});
     }
-
+*/
     getNamesOfSchedules(term: string): Observable<string[]>{
         return this.httpClient
             .get('api/search/?name=' + term)
@@ -46,6 +46,7 @@ export class ScheduleService {
             .then(response => new Schedule(response['schedule']));
     }
 
+    //NOT USED
     getAvailableTimeForCheckin(scheduleId: number, date: string): Promise<string[]>{
         return this.httpClient
             .get('api/schedule/' + scheduleId + '/available?date=' + date)

@@ -22,6 +22,7 @@ import { CarwashSearchComponent } from './checkin/carwash-search/carwash-search.
 import { ScheduleChoiceComponent } from './checkin/schedule-choice/schedule-choice.component';
 import { TimeChoiceComponent } from './checkin/time-choice/time-choice.component';
 import { FinishCheckinComponent } from './checkin/finish-checkin/finish-checkin.component';
+import { ClientLoginComponent } from './user/client-login.component';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -33,7 +34,8 @@ import { AppRoutingModule } from './app-routing.module';
     CarwashSearchComponent,
     ScheduleChoiceComponent,
     TimeChoiceComponent,
-    FinishCheckinComponent
+    FinishCheckinComponent,
+    ClientLoginComponent
   ],
   imports: [
     BrowserModule,

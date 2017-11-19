@@ -1,0 +1,11 @@
+.horizontal-center{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    
+    max-width: 940px;
+    height: 70vh;
+}

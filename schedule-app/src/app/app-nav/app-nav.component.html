@@ -11,6 +11,7 @@
         
         <button md-button [mdMenuTriggerFor]="menu">User</button>
         <md-menu #menu="mdMenu">
+            <a md-menu-item [routerLink]='["/login"]'>Login</a>
             <a md-menu-item>Profile</a>
             <a md-menu-item>Checkins</a>
             <a md-menu-item>Log out</a>
