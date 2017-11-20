@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.urls import reverse
 from django.core import serializers
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .models.schedule import ScheduleCreateForm, ScheduleDetailsForm, Schedule
 
@@ -79,6 +80,7 @@ def get_schedules_brief_info(request):
 
     return JsonResponse( {'schedules': schedules_info} )
 
+@ensure_csrf_cookie
 def get_schedule_detail_info(request, schedule_id):
     """Returns schedule detailed info."""
     schedule = Schedule.objects.get(id=schedule_id)
